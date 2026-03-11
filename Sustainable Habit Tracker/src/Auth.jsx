@@ -8,8 +8,13 @@ export default function Auth() {
   const [isSignUp, setIsSignUp] = useState(false)
   const [username, setUsername] = useState('') 
   const [name, setName] = useState('')
+  
+  const [message, setMessage] = useState('')
+  const [isError, setIsError] = useState(false)
 
   const handleAuth = async () => {
+    setMessage('')
+    
     if(isSignUp){
       const {data, error} = await supabase.auth.signUp({  
         email,
@@ -21,20 +26,31 @@ export default function Auth() {
           }
         }
       })
-      if(error) alert(`Error signing up: ${error.message}`)
-      else alert(`Sign up successful: ${data.name}`)
+      if(error) {
+        setMessage(`Error: ${error.message}`)
+        setIsError(true)
+      } else {
+        setMessage(`Sign up successful! Welcome, ${data.user.user_metadata.name || 'friend'}.`)
+        setIsError(false)
+      }
     } 
     else {
       const {data, error} = await supabase.auth.signInWithPassword({
         email,
         password
       })
-      if(error) {alert(`Error logging in: ${error.message}`)}
-      else {
-        const nameToDisplay = data.user.user_metadata.name || 'unknown'
-        alert(`Logged in Welcome back: ${nameToDisplay}`)
+      if(error) {
+        setMessage(`Error: ${error.message}`)
+        setIsError(true)
+      } else {
+        setMessage('') 
       }
     }
+  }
+
+  const toggleMode = () => {
+    setIsSignUp(!isSignUp)
+    setMessage('')
   }
 
   return (
@@ -72,8 +88,21 @@ export default function Auth() {
           value={password}
           onChange={(e) => setPassword(e.target.value)} 
           />
+          
           <button onClick={handleAuth}>{isSignUp ? 'Sign Up' : 'Log In'}</button>
-          <p onClick={() => setIsSignUp(!isSignUp)} style={{cursor: 'pointer', color: 'green'}}>
+
+          {message && (
+            <p style={{ 
+              color: isError ? '#d9534f' : '#2E8B57', 
+              fontWeight: 'bold',
+              marginTop: '15px',
+              marginBottom: '0'
+            }}>
+              {message}
+            </p>
+          )}
+
+          <p onClick={toggleMode} style={{cursor: 'pointer', color: 'green', marginTop: '20px'}}>
           {isSignUp ? 'Already have an account? Log In' : 'Need an account? Sign Up'}
           </p>
         </div>
