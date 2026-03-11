@@ -1,0 +1,1 @@
+Need to put npm install in the terminal to download the node dependencies and then you can enter npm run dev and then you should be able to go online
