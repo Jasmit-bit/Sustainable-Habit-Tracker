@@ -1,0 +1,156 @@
+/* Page background */
+
+body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  height: 100vh;
+
+  background: linear-gradient(135deg, #d8f3dc, #95d5b2);
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+/* Login container */
+
+.App {
+  background: white;
+  padding: 40px;
+  width: 340px;
+
+  border-radius: 16px;
+
+  box-shadow: 0 12px 35px rgba(0,0,0,0.15);
+}
+
+
+/* Title */
+
+h1 {
+  text-align: center;
+  margin-bottom: 25px;
+  color: #1b4332;
+}
+
+
+/* Inputs */
+
+input {
+  width: 100%;
+  padding: 10px 12px;
+  margin: 10px 0;
+
+  border-radius: 8px;
+  border: 1px solid #ccd5ae;
+
+  background-color: #f8fff9;
+  color: #1b4332;
+
+  font-size: 14px;
+
+  box-sizing: border-box;
+
+  transition: all 0.2s ease;
+}
+
+
+/* Input focus effect */
+
+input:focus {
+  outline: none;
+  border-color: #2d6a4f;
+  box-shadow: 0 0 0 2px rgba(45,106,79,0.2);
+}
+
+
+/* Placeholder text */
+
+input::placeholder {
+  color: #7a8f7d;
+}
+
+
+/* Button */
+
+button {
+  width: 100%;
+  padding: 11px;
+  margin-top: 15px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: linear-gradient(135deg, #2d6a4f, #40916c);
+
+  color: white;
+  font-size: 15px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  transition: all 0.25s ease;
+}
+
+
+/* Button hover */
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+}
+
+
+/* Switch login/signup text */
+
+.switch {
+  margin-top: 15px;
+  text-align: center;
+
+  color: #2d6a4f;
+
+  cursor: pointer;
+  font-size: 14px;
+}
+
+
+/* Switch hover */
+
+.switch:hover {
+  text-decoration: underline;
+}
+
+/* Logo container */
+
+.logo-container {
+  position: absolute;
+  top: 25px;
+  left: 30px;
+
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  font-weight: 700;
+  font-size: 20px;
+
+  color: #1b4332;
+}
+
+
+/* Logo icon */
+
+.logo-icon {
+  height: 32px;
+  width: 32px;
+  object-fit: contain;
+}
+
+.logo-container:hover {
+  opacity: 0.8;
+}
+
+.logo-text {
+  letter-spacing: 0.5px;
+}
