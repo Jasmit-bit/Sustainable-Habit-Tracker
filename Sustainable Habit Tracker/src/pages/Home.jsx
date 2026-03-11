@@ -31,8 +31,8 @@ export default function Home() {
           <p style={{ margin: '5px 0 0', color: '#555', fontSize: '0.9rem', fontWeight: 'bold' }}>kg CO₂ Saved</p>
         </div>
         <div style={{ flex: 1, backgroundColor: '#FFF3E0', padding: '20px', borderRadius: '15px', textAlign: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
-          <h3 style={{ margin: 0, color: '#E65100', fontSize: '1.8rem' }}>🔥 3</h3>
-          <p style={{ margin: '5px 0 0', color: '#555', fontSize: '0.9rem', fontWeight: 'bold' }}>Day Streak</p>
+          <h3 style={{ margin: 0, color: '#E65100', fontSize: '1.8rem' }}>📝 3</h3>
+          <p style={{ margin: '5px 0 0', color: '#555', fontSize: '0.9rem', fontWeight: 'bold' }}>Activities Logged</p>
         </div>
       </div>
 
