@@ -5,7 +5,7 @@ import { supabase } from './supabaseClient'
 
 import Auth from './Auth' 
 import Home from './pages/Home' 
-import HabitLog from './pages/HabitLog' // If you created this earlier
+import HabitLog from './pages/HabitLog' 
 
 function App() {
   const [session, setSession] = useState(null)
