@@ -18,12 +18,63 @@ export default function Family() {
   const [isJoining, setIsJoining] = useState(false);
   const [joinCode, setJoinCode] = useState('');
 
+  //list for holding all the family membs for the dashboard
+  const[members, setMembers] = useState([]);
+
+  // goal setting variables 
+  const [co2Goal, setCo2Goal] = useState(0);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [isEditingGoal, setIsEditingGoal] = useState(false);
+
+  // I want to to make the leaderboard a bit more clearer and I want to highlight the current user so I need to know who the current user is 
+  
+
   useEffect(() => {
     checkHouseExists();
   }, []);
 
   // because every user starts off with no household I need to check if they have a household or not, if they do then I set that otherwise I show I different screen 
   // which tells them to create or join a household
+  async function getMembers(householdId)
+  {
+    const{data:list,error} = await supabase.
+    from('profiles')
+    .select('name, username, co2_saved')
+    .eq('household_id',householdId)
+    .order('co2_saved', { ascending: false, nullsFirst: false }); // by doing this i can make the users be sorted by 
+    if(error)
+    {
+      // this error isnt really going to be able to be fixed by the user so I am just going to put in the console instead of showing it to the user and I might change it later but cba atm
+      console.error("error getting member:", error);
+    }
+    else
+    {
+      setMembers(list);
+    }
+  }
+
+ async function updateGoal(e) {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      const { data: { user } } = await supabase.auth.getUser();
+      
+      const { error } = await supabase
+        .from('households')
+        .update({ co2_goal: Number(co2Goal) })
+        .eq('admin_id', user.id); 
+
+      if (error) throw error;
+
+      setIsEditingGoal(false);
+
+    } catch (error) {
+      setError(true);
+      setMessage(error.message);
+    } finally {
+      setLoading(false);
+    }
+  }
 
   async function checkHouseExists() {
     try {
@@ -50,16 +101,24 @@ export default function Family() {
         setHasHousehold(true);
         const{data:household, error:householdError} = await supabase
         .from('households')
-        .select('name, inviteCode') 
+        .select('name, inviteCode,admin_id,co2_goal') 
         .eq('id', profile.household_id)
         .single();
 
         if(householdError) {throw householdError;}
       
-        // set the houshold name and the invite code for the household if you want to share it with someone else
+        // set the houshold name and the invite code for the household to share it with someone else
         if(household){
           setHouseholdName(household.name);
           setInviteCode(household.inviteCode);
+          setCo2Goal(household.co2_goal);
+
+          if(user.id===household.admin_id)
+          {
+            setIsAdmin(true);
+          }
+
+          await getMembers(profile.household_id)
         }
       }
       else 
@@ -99,6 +158,7 @@ export default function Family() {
         
        while(!isUnique)
        {
+        // I could have done this in Supabase now that I think about it but its easier this way so I dont need to create a household to get an invite code
         generatedInvCode = Math.random().toString(36).substring(2,8).toUpperCase();
 
         // need to check if this code exists already its very unlikely but just in cas e it does
@@ -143,6 +203,7 @@ export default function Family() {
         setInviteCode(newHousehold.inviteCode);
         setHasHousehold(true);
         setIsCreating(false);
+        await getMembers(newHousehold.id)
     }
     catch(error)
     {
@@ -173,7 +234,7 @@ export default function Family() {
         //look for the household with the entered invite code
         const { data: household, error: searchError } = await supabase
         .from('households')
-        .select('id, name, inviteCode')
+        .select('id, name, inviteCode,co2_goal, admin_id')
         .eq('inviteCode', joinCode.toUpperCase())
         .single();
 
@@ -199,6 +260,15 @@ export default function Family() {
       setInviteCode(household.inviteCode);
       setHasHousehold(true);
       setIsJoining(false);
+
+      if(user.id===household.admin_id)
+      {
+        setIsAdmin(true);
+      }
+      
+      setCo2Goal(household.co2_goal||0);
+
+      await getMembers(household.id);
     }
     catch(error)
     {
@@ -211,9 +281,48 @@ export default function Family() {
     }
   }
 
+  async function leaveHousehold()
+  {
+    // im going to add a warning first to let the user confirm that they want to leave
+
+    if(!window.confirm("Are you sure you want to leave?"))
+    {
+      return;
+    }
+
+    try{
+      setLoading(true);
+      setError(false);
+
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) throw new Error("No user logged in");
+      // to leave its simple im just going to remove the id of the houshold its linked to
+        const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ household_id: null })
+        .eq('id', user.id);
+        if (updateError) throw updateError;
+        //now that I have left i need to update the screen and the variables I made at the top
+        setHasHousehold(false);
+        setHouseholdName('');
+        setInviteCode('');
+        setMembers([]);
+        setCo2Goal(0);
+        setIsAdmin(false);
+    }
+    catch(error)
+    {
+      setError(true);
+      setMessage(error.message);
+    }finally{
+      setLoading(false);
+    }
+  }
+
   if (loading) {
     return <div className="loading-screen">Loading..</div>;
   }
+
 
   return (
     <div className="family-container">
@@ -223,9 +332,88 @@ export default function Family() {
       {/* if they do have a family I am going to render the dashboard otherwise the no household screen gets shown */}
       {hasHousehold ? (
         <div className="household-dashboard">
-          <h2>Welcome to the {householdName} Household</h2>
-          <p>Invite Code: <strong>{inviteCode}</strong></p>
-          
+          <div className="dashboard-header">
+            <h2>{householdName}</h2>
+            <p>Invite Code: <span className="invite-badge">{inviteCode}</span></p>
+          </div>
+
+          <div className="co2-goal-section">
+            <h3>Monthly CO2 Goal</h3>
+            
+            {isEditingGoal && isAdmin ? (
+              <form onSubmit={updateGoal} className="goal-form">
+                <input 
+                  type="number" 
+                  value={co2Goal}
+                  onChange={(e) => setCo2Goal(e.target.value)}
+                />
+                <button type="submit">Save</button>
+                <button type="button" className="cancel-btn" onClick={() => setIsEditingGoal(false)}>Cancel</button>
+              </form>
+            ) : (
+              <div className="goal-display">
+                <p className="goal-number">{co2Goal} kg</p>
+                {isAdmin && (
+                  <button onClick={() => setIsEditingGoal(true)}>Edit Goal</button>
+                )}
+              </div>
+            )}
+          </div>
+
+          <div className="members-section">
+            <h3>Family Members</h3>
+            {members.length > 0 ? (
+              <ul className="members-list">
+                {members.map((member, index) => {
+                  // 1. Safely grab the saved amount and the goal
+                  const saved = member.co2_saved || 0;
+                  const goal = co2Goal || 0;
+                  
+                  // 2. Calculate the percentage (prevents dividing by zero)
+                  const progressPercent = goal > 0 ? Math.min((saved / goal) * 100, 100) : 0;
+
+                  return (
+                    <li key={index} className="member-item">
+                      <div className="member-avatar">
+                        {member.name ? member.name.charAt(0).toUpperCase() : '?'}
+                      </div>
+                      
+                      {/* 3. The new Progress Bar UI */}
+                      <div className="member-info-container">
+                        <div className="member-info-header">
+                          <span className="member-name">{member.name}</span> 
+                          <span className="member-username">@{member.username}</span>
+                        </div>
+                        
+                        <div className="progress-section">
+                          <div className="progress-stats">
+                            <span>{saved} kg saved</span>
+                            <span>{goal} kg goal</span>
+                          </div>
+                          <div className="progress-bar-bg">
+                            <div 
+                              className="progress-bar-fill" 
+                              style={{ width: `${progressPercent}%` }}
+                            ></div>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
+            ) : (
+              <p>Loading members...</p>
+            )}
+          </div>
+          <div className="dashboard-footer">
+            <button 
+              className="leave-btn" 
+              onClick={leaveHousehold}
+            >
+              Leave Household
+            </button>
+          </div>
         </div>
       ) : (
         <div className="no-household-screen">
