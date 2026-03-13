@@ -1,6 +1,6 @@
 import { useState, useEffect, use} from 'react';
 import {supabase} from '../supabaseClient';
-//import './Family.css';
+import './Family.css';
 
 export default function Family() {
   const [loading, setLoading] = useState(true);
@@ -9,6 +9,11 @@ export default function Family() {
   const [inviteCode, setInviteCode] = useState(''); 
   const [message, setMessage] = useState('');
   const [error, setError] = useState(false);
+
+  // variables for creating the household 
+  const [isCreating, setIsCreating] = useState(false);
+  const [newHouseholdName, setNewHouseholdName] = useState('');
+
 
   useEffect(() => {
     checkHouseExists();
@@ -68,6 +73,53 @@ export default function Family() {
       setLoading(false);
     } 
   }
+
+  async function createHousehold(e)
+  {
+    e.preventDefault();
+
+    try{
+
+      setLoading(true);
+      setError(false);
+      setMessage('');
+
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) 
+        {
+          throw new Error("No user logged in");
+        }
+
+        // want to create an invite code randomly I could do this in supabase but then I would have to let the
+        // row to be made and then retrieve it which can be more complicated
+
+        let isUnique = false; 
+        let generatedInvCode = '';
+        
+       while(!isUnique)
+       {
+        generatedInvCode = Math.random().toString(36).substring(2,8).toUpperCase();
+
+        // need to check if this code actually exists its very unlikely but just in cas e it does
+        
+
+       }
+
+        // now that 
+
+
+
+    }
+    catch
+    {
+
+    }
+
+  }
+
+
+
+
 
   if (loading) {
     return <div className="loading-screen">Loading..</div>;
