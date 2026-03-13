@@ -100,21 +100,58 @@ export default function Family() {
        {
         generatedInvCode = Math.random().toString(36).substring(2,8).toUpperCase();
 
-        // need to check if this code actually exists its very unlikely but just in cas e it does
-        
+        // need to check if this code exists already its very unlikely but just in cas e it does
+        const {data:existingHouseholds, error: searchError } = await supabase
+        .from('households')
+        .select('inviteCode')
+        .eq('inviteCode',generatedInvCode);
 
+        if(searchError) throw searchError;
+
+        // no duplicate found
+        if(existingHouseholds.length === 0)
+        {
+          isUnique = true;
+        }
        }
 
-        // now that 
+        // now that I know that the code is unique I can add it to the database
 
+        const {data:newHousehold, error: insertError } = await supabase
+        .from('households')
+        .insert([{
+          name: newHouseholdName,
+          inviteCode: generatedInvCode,
+          amind_id: user.id
+        }])
+        .select()
+        .single();
 
+        if(insertError) throw insertError;
 
+        //now that the household is created I want to update the user table with this information
+
+        const{error:updateError} = await supabase
+        .from('profiles')
+        .update({household_id: newHousehold.id})
+        .eq('id',user.id);
+
+        if(updateError) throw updateError;
+
+        setHouseholdName(newHousehold.name);
+        setInviteCode(newHousehold.inviteCode);
+        setHasHousehold(true);
+        setIsCreating(false);
     }
-    catch
+    catch(error)
     {
-
+      setError(true);
+      setMessage(error.message);
     }
-
+    finally
+    {
+      setLoading(false);
+    }
   }
 
 
