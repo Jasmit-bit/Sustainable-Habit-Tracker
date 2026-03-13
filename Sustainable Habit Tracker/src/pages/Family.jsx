@@ -27,7 +27,7 @@ export default function Family() {
   const [isEditingGoal, setIsEditingGoal] = useState(false);
 
   // I want to to make the leaderboard a bit more clearer and I want to highlight the current user so I need to know who the current user is 
-  
+  const[currentUserId,setCurrentUserId] = useState(null);
 
   useEffect(() => {
     checkHouseExists();
@@ -39,7 +39,7 @@ export default function Family() {
   {
     const{data:list,error} = await supabase.
     from('profiles')
-    .select('name, username, co2_saved')
+    .select('id, name, username, co2_saved')
     .eq('household_id',householdId)
     .order('co2_saved', { ascending: false, nullsFirst: false }); // by doing this i can make the users be sorted by 
     if(error)
@@ -66,6 +66,7 @@ export default function Family() {
 
       if (error) throw error;
 
+      setCo2Goal(co2Goal);
       setIsEditingGoal(false);
 
     } catch (error) {
@@ -85,6 +86,10 @@ export default function Family() {
 
       // this screen is locked behind a log in screen but just incase the user does manage to get to this page without being logged in I am going to add a error message
       if(!user) throw new Error("No user logged in")
+
+        setCurrentUserId(user.id);
+
+
 
       // check if the user has an household already
       const { data : profile, error } = await supabase
@@ -372,16 +377,21 @@ export default function Family() {
                   // 2. Calculate the percentage (prevents dividing by zero)
                   const progressPercent = goal > 0 ? Math.min((saved / goal) * 100, 100) : 0;
 
+                  const isCurrentUser = (member.id ===currentUserId);
+
                   return (
-                    <li key={index} className="member-item">
+                    <li key={index} className={`member-item ${isCurrentUser ? 'current-user-card' : ''}`}>
                       <div className="member-avatar">
                         {member.name ? member.name.charAt(0).toUpperCase() : '?'}
                       </div>
                       
-                      {/* 3. The new Progress Bar UI */}
                       <div className="member-info-container">
                         <div className="member-info-header">
-                          <span className="member-name">{member.name}</span> 
+                          <span className="member-name">
+                            {member.name} 
+                            {/* Optional: Add a little " (You)" badge */}
+                            {isCurrentUser && <span className="you-badge">(You)</span>}
+                          </span> 
                           <span className="member-username">@{member.username}</span>
                         </div>
                         

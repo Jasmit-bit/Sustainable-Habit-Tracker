@@ -281,3 +281,29 @@ input[type="number"] {
   border-top: 1px solid #e5e7eb;
   text-align: center;
 }
+
+
+.current-user-card {
+  background: #f0fdf4; 
+  border: 2px solid #34d399; 
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+  transform: scale(1.01); 
+}
+
+
+.current-user-card {
+  background: #f0fdf4; 
+  border: 2px solid #34d399; 
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15); 
+  transform: scale(1.01);
+}
+
+.you-badge {
+  font-size: 0.85rem;
+  color: #059669;
+  font-weight: 700;
+  margin-left: 6px;
+  background: #d1fae5;
+  padding: 2px 6px;
+  border-radius: 12px;
+}
