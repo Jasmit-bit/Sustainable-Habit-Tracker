@@ -10,10 +10,13 @@ export default function Family() {
   const [message, setMessage] = useState('');
   const [error, setError] = useState(false);
 
-  // variables for creating the household 
+  // variables for creating the household only
   const [isCreating, setIsCreating] = useState(false);
   const [newHouseholdName, setNewHouseholdName] = useState('');
 
+  // variable used for joining only
+  const [isJoining, setIsJoining] = useState(false);
+  const [joinCode, setJoinCode] = useState('');
 
   useEffect(() => {
     checkHouseExists();
@@ -30,7 +33,6 @@ export default function Family() {
       const {data : {user}} = await supabase.auth.getUser();
 
       // this screen is locked behind a log in screen but just incase the user does manage to get to this page without being logged in I am going to add a error message
-
       if(!user) throw new Error("No user logged in")
 
       // check if the user has an household already
@@ -65,7 +67,6 @@ export default function Family() {
         setHasHousehold(false);
       }
     } catch (error) { 
-      // Handle errors thrown in the try block
       setError(true);
       setMessage(error.message || "Something went wrong fetching your household.");
     } finally {
@@ -74,7 +75,7 @@ export default function Family() {
     } 
   }
 
-  async function createHousehold(e)
+  async function handleCreateHousehold(e)
   {
     e.preventDefault();
 
@@ -108,7 +109,7 @@ export default function Family() {
 
         if(searchError) throw searchError;
 
-        // no duplicate found
+        
         if(existingHouseholds.length === 0)
         {
           isUnique = true;
@@ -122,7 +123,7 @@ export default function Family() {
         .insert([{
           name: newHouseholdName,
           inviteCode: generatedInvCode,
-          amind_id: user.id
+          admin_id: user.id 
         }])
         .select()
         .single();
@@ -154,9 +155,61 @@ export default function Family() {
     }
   }
 
+  async function handleJoinHousehold(e)
+  {
+    e.preventDefault();
 
+    try {
+      setLoading(true);
+      setError(false);
+      setMessage('');
 
+      const{data: {user}} = await supabase.auth.getUser();
+      if (!user) 
+        {
+          throw new Error("No user logged in");
+        }
+      
+        //look for the household with the entered invite code
+        const { data: household, error: searchError } = await supabase
+        .from('households')
+        .select('id, name, inviteCode')
+        .eq('inviteCode', joinCode.toUpperCase())
+        .single();
 
+        // on reddit I found that if supabase doesnt find a match, the error code is PGRST116
+
+        if (searchError) {
+        if (searchError.code === 'PGRST116') {
+          throw new Error("Invalid invite code, Please check and try again.");
+        }
+        throw searchError;
+      }
+
+      //if found add the update the profile to link to the household
+
+      const { error: updateError } = await supabase
+        .from('profiles')
+        .update({ household_id: household.id })
+        .eq('id', user.id);
+
+      if (updateError) throw updateError;
+
+      setHouseholdName(household.name);
+      setInviteCode(household.inviteCode);
+      setHasHousehold(true);
+      setIsJoining(false);
+    }
+    catch(error)
+    {
+      setError(true);
+      setMessage(error.message);
+    }
+    finally
+    {
+      setLoading(false);
+    }
+  }
 
   if (loading) {
     return <div className="loading-screen">Loading..</div>;
@@ -164,7 +217,7 @@ export default function Family() {
 
   return (
     <div className="family-container">
-      {/* Error message for the errors thrown above */}
+      {/* error message for the errors thrown above */}
       {error && <div className="error-message">{message}</div>}
 
       {/* if they do have a family I am going to render the dashboard otherwise the no household screen gets shown */}
@@ -172,13 +225,50 @@ export default function Family() {
         <div className="household-dashboard">
           <h2>Welcome to the {householdName} Household</h2>
           <p>Invite Code: <strong>{inviteCode}</strong></p>
+          
         </div>
       ) : (
         <div className="no-household-screen">
           <h2>You don't have a household yet!</h2>
           <p>Create a new household or join an existing one.</p>
-          <button>Create a Household</button>
-          <button>Join a Household</button>
+          
+          {/* initial buttons */}
+          {!isCreating && !isJoining && (
+            <div className="action-buttons">
+              <button onClick={() => setIsCreating(true)}>Create a Household</button>
+              <button onClick={() => setIsJoining(true)}>Join a Household</button>
+            </div>
+          )}
+
+          {/*form to create a household */}
+          {isCreating && (
+            <form onSubmit={handleCreateHousehold} className="create-form">
+              <input 
+                type="text" 
+                placeholder="Enter Household Name" 
+                value={newHouseholdName}
+                onChange={(e) => setNewHouseholdName(e.target.value)}
+                required
+              />
+              <button type="submit">Submit</button>
+              <button type="button" className="cancel-btn" onClick={() => setIsCreating(false)}>Cancel</button>
+            </form>
+          )}
+
+          {isJoining && (
+            <form onSubmit={handleJoinHousehold} className="join-form">
+              <input 
+                type="text" 
+                placeholder="Enter 6 Digit Invite Code" 
+                value={joinCode}
+                onChange={(e) => setJoinCode(e.target.value)}
+                maxLength={6} 
+                required
+              />
+              <button type="submit">Join</button>
+              <button type="button" className="cancel-btn" onClick={() => setIsJoining(false)}>Cancel</button>
+            </form>
+          )}
         </div>
       )}
     </div>
