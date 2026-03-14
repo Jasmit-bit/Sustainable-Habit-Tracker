@@ -1,27 +1,6 @@
 import { supabase } from '../supabaseClient.js'
 
-export async function logFoodHabit(userID, habitID) {
-    // Extracting totalCo2 and totalPlastic
-    const { data: habitData, error: habitError } = await getHabit(habitID);
-
-    const totalCo2 = habitData[0].co2Saved;
-    const totalPlastic = habitData[0].plasticSaved;
-
-    // Inserting into habits_log table
-    const { data, error } = await supabase
-    .from('habit_logs')
-    .insert({
-        user_id: userID,
-        habit_id: habitID,
-        total_co2_saved: totalCo2,
-        total_plastic_saved: totalPlastic
-    }
-    )
-    
-    return { data, error };
-}
-
-export async function logShoppingHabit(userID, habitID) {
+export async function logNormalHabit(userID, habitID) {
     // Extracting totalCo2 and totalPlastic
     const { data: habitData, error: habitError } = await getHabit(habitID);
 
