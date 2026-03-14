@@ -19,6 +19,18 @@ export default function Settings() {
     loadUser()
   }, [])
 
+  const updateName = async () => {
+    await supabase.auth.updateUser({
+      data: { name },
+    })
+  }
+
+  const updateUsername = async () => {
+    await supabase.auth.updateUser({
+      data: { username },
+    })
+  }
+
   return (
     <div className="settings-container">
       <h1>Settings</h1>
@@ -30,7 +42,12 @@ export default function Settings() {
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
-      <button>Update Name</button>
+      <button
+        onClick={updateName}
+        disabled={!name.trim()}
+      >
+        Update Name
+      </button>
 
       <h2 style={{ marginTop: '25px' }}>Username</h2>
       <input
@@ -39,7 +56,12 @@ export default function Settings() {
         value={username}
         onChange={(e) => setUsername(e.target.value)}
       />
-      <button>Update Username</button>
+      <button
+        onClick={updateUsername}
+        disabled={!username.trim()}
+      >
+        Update Username
+      </button>
     </div>
   )
 }
