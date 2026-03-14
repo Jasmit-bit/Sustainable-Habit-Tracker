@@ -1,10 +1,12 @@
 import { supabase } from '../supabaseClient'
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom' 
+import { Link } from 'react-router-dom'
 
 export default function Home() {
   const [userName, setUserName] = useState('')
   const [tip, setTip] = useState('')
+  const [totalCO2Saved, setTotalCO2Saved] = useState('0')
+  const [activityCount, setActivityCount] = useState('0')
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -15,20 +17,33 @@ export default function Home() {
     }
     fetchUser()
 
-    const fetchTips = async () => 
-    {
-      const {data: tips } = await supabase.from('tips').select('*')
+    const fetchTips = async () => {
+      const { data: tips } = await supabase.from('tips').select('*')
       if (tips) {
         const randomIndex = Math.floor(Math.random() * tips.length)
         setTip(tips[randomIndex].content)
-      } 
+      }
     }
     fetchTips()
+
+    const fetchStats = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        const { data: habitLogs } = await supabase.from('habit_logs').select('*').eq('user_id', user.id);
+        console.log(habitLogs)
+        if (habitLogs) {
+          const totalCO2 = habitLogs.reduce((total, current) => total + current.total_co2_saved, 0)
+          setActivityCount(habitLogs.length)
+          setTotalCO2Saved(totalCO2)
+        }
+      }
+    }
+    fetchStats()
   }, [])
 
   return (
     <div style={{ padding: '20px', fontFamily: 'sans-serif', maxWidth: '600px', margin: '0 auto' }}>
-      
+
       {/* 1. Welcoming Header Section */}
       <div style={{ textAlign: 'center', marginBottom: '30px', marginTop: '10px' }}>
         <h1 style={{ color: '#2E8B57', fontSize: '2rem', marginBottom: '5px' }}>Hello, {userName}! 🌍</h1>
@@ -38,11 +53,11 @@ export default function Home() {
       {/* 2. Quick Stats Widget (Mock data for now!) */}
       <div style={{ display: 'flex', gap: '15px', marginBottom: '30px' }}>
         <div style={{ flex: 1, backgroundColor: '#E8F5E9', padding: '20px', borderRadius: '15px', textAlign: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
-          <h3 style={{ margin: 0, color: '#2E8B57', fontSize: '1.8rem' }}>12.5</h3>
+          <h3 style={{ margin: 0, color: '#2E8B57', fontSize: '1.8rem' }}>{totalCO2Saved}</h3>
           <p style={{ margin: '5px 0 0', color: '#555', fontSize: '0.9rem', fontWeight: 'bold' }}>kg CO₂ Saved</p>
         </div>
         <div style={{ flex: 1, backgroundColor: '#FFF3E0', padding: '20px', borderRadius: '15px', textAlign: 'center', boxShadow: '0 4px 6px rgba(0,0,0,0.05)' }}>
-          <h3 style={{ margin: 0, color: '#E65100', fontSize: '1.8rem' }}>📝 3</h3>
+          <h3 style={{ margin: 0, color: '#E65100', fontSize: '1.8rem' }}>📝 {activityCount}</h3>
           <p style={{ margin: '5px 0 0', color: '#555', fontSize: '0.9rem', fontWeight: 'bold' }}>Activities Logged</p>
         </div>
       </div>
