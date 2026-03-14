@@ -1,29 +1,89 @@
 import { supabase } from '../supabaseClient.js'
 
-export async function logHabit(userID, habitID) {
+export async function logFoodHabit(userID, habitID) {
+    // Extracting totalCo2 and totalPlastic
+    const { data: habitData, error: habitError } = await getHabit(habitID);
+
+    const totalCo2 = habitData[0].co2Saved;
+    const totalPlastic = habitData[0].plasticSaved;
+
+    // Inserting into habits_log table
     const { data, error } = await supabase
     .from('habit_logs')
     .insert({
         user_id: userID,
-        habit_id: habitID
+        habit_id: habitID,
+        total_co2_saved: totalCo2,
+        total_plastic_saved: totalPlastic
     }
     )
     
     return { data, error };
 }
 
-export async function getHabit(habitName) {
+export async function logShoppingHabit(userID, habitID) {
+    // Extracting totalCo2 and totalPlastic
+    const { data: habitData, error: habitError } = await getHabit(habitID);
+
+    const totalCo2 = habitData[0].co2Saved;
+    const totalPlastic = habitData[0].plasticSaved;
+
+    // Inserting into habits_log table
+    const { data, error } = await supabase
+    .from('habit_logs')
+    .insert({
+        user_id: userID,
+        habit_id: habitID,
+        total_co2_saved: totalCo2,
+        total_plastic_saved: totalPlastic
+    }
+    )
+    
+    return { data, error };
+}
+
+export async function logTransportHabit(userID, habitID, distance) {
+    // Calculating totalCo2 and plasticSaved
+    const { data: habitData, error: habitError } = await getHabit(habitID);
+
+    const totalCo2 = habitData[0].co2Saved * distance;
+    const totalPlastic = habitData[0].plasticSaved;
+
+    // Inserting into habits_log table
+    const { data, error } = await supabase
+    .from('habit_logs')
+    .insert({
+        user_id: userID,
+        habit_id: habitID,
+        total_co2_saved: totalCo2,
+        total_plastic_saved: totalPlastic
+    }
+    )
+    
+    return { data, error };
+}
+
+export async function getHabit(habitID) {
     const { data, error } = await supabase
     .from('habit')
     .select('*')
-    .eq('habit_name', habitName)
+    .eq('id', habitID)
 
     return { data, error };
 }
 
 
-// Transport functions - calculating Co2 saved per km ccompared to a petrol car
+export async function getHabitsByCategory(category) {
+    const { data, error } = await supabase
+        .from('habit')
+        .select('*')
+        .eq('category', category)
 
+    return { data, error }
+}
+
+
+// Transport function - calculating Co2 saved per km ccompared to a petrol car
 export async function calculateTransportCo2Saved(transportName, distanceKm) {
     const { data, error } = await supabase
     .from('habit')
@@ -43,3 +103,4 @@ export async function calculateTransportCo2Saved(transportName, distanceKm) {
         return totalCo2Saved;
     }
 }
+
