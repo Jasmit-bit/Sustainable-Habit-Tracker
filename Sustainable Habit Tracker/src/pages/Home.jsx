@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 
 export default function Home() {
   const [userName, setUserName] = useState('')
+  const [tip, setTip] = useState('')
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -13,6 +14,16 @@ export default function Home() {
       }
     }
     fetchUser()
+
+    const fetchTips = async () => 
+    {
+      const {data: tips } = await supabase.from('tips').select('*')
+      if (tips) {
+        const randomIndex = Math.floor(Math.random() * tips.length)
+        setTip(tips[randomIndex].content)
+      } 
+    }
+    fetchTips()
   }, [])
 
   return (
@@ -56,9 +67,7 @@ export default function Home() {
       {/* 4. Daily Eco-Tip Card */}
       <div style={{ backgroundColor: '#E3F2FD', padding: '20px', borderRadius: '15px', borderLeft: '6px solid #2196F3', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
         <h4 style={{ margin: '0 0 10px 0', color: '#1565C0', fontSize: '1.1rem' }}>💡 Daily Eco-Tip</h4>
-        <p style={{ margin: 0, color: '#333', fontSize: '0.95rem', lineHeight: '1.5' }}>
-          Unplugging devices when not in use can save up to 10% on your energy bill and significantly reduce your baseline carbon emissions over a year!
-        </p>
+        <p style={{ margin: 0, color: '#333', fontSize: '0.95rem', lineHeight: '1.5' }}>{tip}</p>
       </div>
 
     </div>
