@@ -99,7 +99,7 @@ function HabitLog() {
       padding: '20px',
       fontFamily: 'Arial, sans-serif',
       backgroundColor: '#fff',
-      minHeight: '100vh',
+      minHeight: '80vh',                  // CHANGE MADE HERE
       display: 'flex',
       flexDirection: 'column'
     },
@@ -150,8 +150,8 @@ function HabitLog() {
     },
     select: {
       width: '100%',
-      padding: '12px',
-      fontSize: '16px',
+      padding: '8px',                 // CHANGES MADE HERE
+      fontSize: '14px',
       border: '2px solid #ddd',
       borderRadius: '8px',
       boxSizing: 'border-box',
@@ -166,18 +166,18 @@ function HabitLog() {
     },
     input: {
       width: '100%',
-      padding: '12px',
-      fontSize: '16px',
+      padding: '8px',
+      fontSize: '14px',
       border: '2px solid #ddd',
       borderRadius: '8px',
       boxSizing: 'border-box',
-      marginTop: '10px'
+      marginTop: '0px'
     },
     buttonContainer: {
       display: 'flex',
       gap: '10px',
       marginTop: 'auto',
-      paddingTop: '20px'
+      paddingTop: '10px'
     },
     button: {
       flex: 1,
@@ -213,7 +213,7 @@ function HabitLog() {
 
   return (
     <div style={styles.container}>
-      <h1 style={styles.header}>🌱 Log Sustainable Action</h1>
+      <h1 style={styles.header}>Log Habit</h1>
 
       {/* Category Selection */}
       <div style={styles.section}>
