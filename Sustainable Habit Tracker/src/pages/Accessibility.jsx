@@ -4,6 +4,9 @@ export default function Accessibility() {
   const [darkMode, setDarkMode] = useState(false)
   const [textSize, setTextSize] = useState(16)
   const [brightness, setBrightness] = useState(100)
+  const [theme, setTheme] = useState('green')
+
+  const themes = ['green', 'blue', 'sunset', 'warmsand']
 
   const handleDarkMode = () => {
     const newValue = !darkMode
@@ -21,6 +24,19 @@ export default function Accessibility() {
     const newBrightness = e.target.value
     setBrightness(newBrightness)
     document.body.style.filter = `brightness(${newBrightness}%)`
+  }
+
+  const handleThemeClick = (newTheme) => {
+    setTheme(newTheme)
+
+    document.body.classList.remove(
+      'theme-green',
+      'theme-blue',
+      'theme-sunset',
+      'theme-warmsand'
+    )
+
+    document.body.classList.add(`theme-${newTheme}`)
   }
 
   return (
@@ -53,6 +69,17 @@ export default function Accessibility() {
         onChange={handleBrightness}
       />
       <p>Brightness: {brightness}%</p>
+
+      <h3 style={{ marginTop: '25px' }}>Theme Style</h3>
+      <div className="theme-options">
+        {themes.map((color) => (
+          <div
+            key={color}
+            className={`theme-circle ${theme === color ? 'active' : ''} preview-${color}`}
+            onClick={() => handleThemeClick(color)}
+          />
+        ))}
+      </div>
     </div>
   )
 }
