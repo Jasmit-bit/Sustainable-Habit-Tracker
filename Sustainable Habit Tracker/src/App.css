@@ -243,3 +243,39 @@ button.leave-btn:hover {
 .preview-warmsand {
   background: linear-gradient(135deg, #f5e6ca, #e8d8b0);
 }
+
+/* Logout Button */
+
+.logout-btn {
+  background: #555;
+  margin-bottom: 10px;
+  transition: background 0.3s ease;
+}
+
+.logout-btn:hover {
+  background: #c1121f;
+}
+
+/* Dark mode */
+
+.dark-mode {
+  background: #121212 !important;
+  color: white !important;
+}
+
+.dark-mode .App {
+  background: #1e1e1e;
+}
+
+.dark-mode input {
+  background-color: #2c2c2c;
+  color: white;
+  border: 1px solid #555;
+}
+
+.dark-mode button {
+  background: linear-gradient(135deg, #333, #555);
+}
+.dark-mode button:hover {
+  background: linear-gradient(135deg, #555, #777);
+}
