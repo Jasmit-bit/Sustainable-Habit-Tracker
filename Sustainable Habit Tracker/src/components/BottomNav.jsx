@@ -87,11 +87,6 @@ export default function BottomNav() {
         <span style={{ fontSize: '20px', marginBottom: '4px' }}>⚙️</span>
         <span style={{ fontSize: '10px' }}>Settings</span>
       </Link>
-
-      <button onClick={handleLogout} style={logoutButtonStyle}>
-        <span style={{ fontSize: '20px', marginBottom: '4px' }}>🚪</span>
-        <span style={{ fontSize: '10px' }}>Log Out</span>
-      </button>
     </nav>
   )
 }
