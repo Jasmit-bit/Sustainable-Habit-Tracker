@@ -25,29 +25,48 @@ export default function Settings() {
     loadUser()
   }, [])
 
-  const updateName = async () => {
+ const updateName = async () => {
     setNameMessage('')
-    const { error } = await supabase.auth.updateUser({
-      data: { name },
-    })
+    try {
+      const { data: { user }, error: authError } = await supabase.auth.getUser()
+      if (authError || !user) throw new Error('Verification Error')
 
-    if (error) {
-      setNameMessage('Error updating name')
-    } else {
+      // 2. Update Auth metadata (keeps things in sync)
+      await supabase.auth.updateUser({ data: { name } })
+
+      //inserting into table becaus the family board pulls from there
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .update({ name: name })
+        .eq('id', user.id)
+
+      if (profileError) throw profileError
+
       setNameMessage('Name updated successfully ✅')
+    } catch (error) {
+      console.error(error)
+      setNameMessage('Error updating name')
     }
   }
 
   const updateUsername = async () => {
     setUsernameMessage('')
-    const { error } = await supabase.auth.updateUser({
-      data: { username },
-    })
+    try {
+      const { data: { user }, error: authError } = await supabase.auth.getUser()
+      if (authError || !user) throw new Error('Verification Error')
 
-    if (error) {
-      setUsernameMessage('Error updating username')
-    } else {
+      await supabase.auth.updateUser({ data: { username } })
+      const { error: profileError } = await supabase
+        .from('profiles')
+        .update({ username: username })
+        .eq('id', user.id)
+
+      if (profileError) throw profileError
+
       setUsernameMessage('Username updated successfully ✅')
+    } catch (error) {
+      console.error(error)
+      setUsernameMessage('Error updating username')
     }
   }
 
