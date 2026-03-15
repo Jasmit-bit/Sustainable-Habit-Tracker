@@ -3,6 +3,7 @@ import { useState } from 'react'
 export default function Accessibility() {
   const [darkMode, setDarkMode] = useState(false)
   const [textSize, setTextSize] = useState(16)
+  const [brightness, setBrightness] = useState(100)
 
   const handleDarkMode = () => {
     const newValue = !darkMode
@@ -14,6 +15,12 @@ export default function Accessibility() {
     const newSize = e.target.value
     setTextSize(newSize)
     document.documentElement.style.fontSize = `${newSize}px`
+  }
+
+  const handleBrightness = (e) => {
+    const newBrightness = e.target.value
+    setBrightness(newBrightness)
+    document.body.style.filter = `brightness(${newBrightness}%)`
   }
 
   return (
@@ -35,6 +42,17 @@ export default function Accessibility() {
         onChange={handleTextSize}
       />
       <p>Current Size: {textSize}px</p>
+
+      <h3 style={{ marginTop: '25px' }}>Brightness</h3>
+      <input
+        type="range"
+        min="30"
+        max="100"
+        step="5"
+        value={brightness}
+        onChange={handleBrightness}
+      />
+      <p>Brightness: {brightness}%</p>
     </div>
   )
 }
