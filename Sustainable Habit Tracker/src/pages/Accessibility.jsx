@@ -25,8 +25,26 @@ export default function Accessibility() {
   const applyStyles = (dark, size, bright, selectedTheme) => {
     document.body.classList.toggle('dark-mode', dark)
     document.documentElement.style.fontSize = `${size}px`
-    document.body.style.filter = `brightness(${bright}%)`
 
+   // changed from filter to an overlay because the filter was breaking the ergonomic thumb zone
+
+    let overlay = document.getElementById('brightness-overlay')
+    if (!overlay) {
+      overlay = document.createElement('div')
+      overlay.id = 'brightness-overlay'
+      overlay.style.position = 'fixed'
+      overlay.style.top = '0'
+      overlay.style.left = '0'
+      overlay.style.width = '100vw'
+      overlay.style.height = '100vh'
+      overlay.style.pointerEvents = 'none' 
+      overlay.style.zIndex = '9999' 
+      document.body.appendChild(overlay)
+    }
+
+    // work out how much darkness opacity needs to be added
+    const darknessOpacity = 1 - (bright / 100);
+    overlay.style.backgroundColor = `rgba(0, 0, 0, ${darknessOpacity})`
     document.body.classList.remove(
       'theme-green',
       'theme-blue',
