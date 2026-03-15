@@ -200,3 +200,46 @@ button.leave-btn:hover {
 .theme-warmsand button {
   background: linear-gradient(135deg, #c2a878, #b08968);
 }
+
+/* Theme selection */
+
+.theme-options {
+  display: flex;
+  gap: 15px;
+  margin-top: 10px;
+  flex-wrap: wrap;
+}
+
+.theme-circle {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.theme-circle:hover {
+  transform: scale(1.1);
+}
+
+.theme-circle.active {
+  box-shadow: 0 0 0 3px white, 0 0 0 6px black;
+}
+
+/* preview backgrounds */
+
+.preview-green {
+  background: linear-gradient(135deg, #d8f3dc, #95d5b2);
+}
+
+.preview-blue {
+  background: linear-gradient(135deg, #caf0f8, #90e0ef);
+}
+
+.preview-sunset {
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+}
+
+.preview-warmsand {
+  background: linear-gradient(135deg, #f5e6ca, #e8d8b0);
+}
