@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 export default function Accessibility() {
   const [darkMode, setDarkMode] = useState(false)
@@ -8,26 +8,24 @@ export default function Accessibility() {
 
   const themes = ['green', 'blue', 'sunset', 'warmsand']
 
-  const handleDarkMode = () => {
-    const newValue = !darkMode
-    setDarkMode(newValue)
-    document.body.classList.toggle('dark-mode', newValue)
-  }
+  useEffect(() => {
+    const savedDark = localStorage.getItem('darkMode') === 'true'
+    const savedSize = Number(localStorage.getItem('textSize')) || 16
+    const savedBrightness = Number(localStorage.getItem('brightness')) || 100
+    const savedTheme = localStorage.getItem('theme') || 'green'
 
-  const handleTextSize = (e) => {
-    const newSize = e.target.value
-    setTextSize(newSize)
-    document.documentElement.style.fontSize = `${newSize}px`
-  }
+    setDarkMode(savedDark)
+    setTextSize(savedSize)
+    setBrightness(savedBrightness)
+    setTheme(savedTheme)
 
-  const handleBrightness = (e) => {
-    const newBrightness = e.target.value
-    setBrightness(newBrightness)
-    document.body.style.filter = `brightness(${newBrightness}%)`
-  }
+    applyStyles(savedDark, savedSize, savedBrightness, savedTheme)
+  }, [])
 
-  const handleThemeClick = (newTheme) => {
-    setTheme(newTheme)
+  const applyStyles = (dark, size, bright, selectedTheme) => {
+    document.body.classList.toggle('dark-mode', dark)
+    document.documentElement.style.fontSize = `${size}px`
+    document.body.style.filter = `brightness(${bright}%)`
 
     document.body.classList.remove(
       'theme-green',
@@ -36,7 +34,34 @@ export default function Accessibility() {
       'theme-warmsand'
     )
 
-    document.body.classList.add(`theme-${newTheme}`)
+    document.body.classList.add(`theme-${selectedTheme}`)
+  }
+
+  const handleDarkMode = () => {
+    const newValue = !darkMode
+    setDarkMode(newValue)
+    localStorage.setItem('darkMode', newValue)
+    applyStyles(newValue, textSize, brightness, theme)
+  }
+
+  const handleTextSize = (e) => {
+    const newSize = e.target.value
+    setTextSize(newSize)
+    localStorage.setItem('textSize', newSize)
+    applyStyles(darkMode, newSize, brightness, theme)
+  }
+
+  const handleBrightness = (e) => {
+    const newBrightness = e.target.value
+    setBrightness(newBrightness)
+    localStorage.setItem('brightness', newBrightness)
+    applyStyles(darkMode, textSize, newBrightness, theme)
+  }
+
+  const handleThemeClick = (newTheme) => {
+    setTheme(newTheme)
+    localStorage.setItem('theme', newTheme)
+    applyStyles(darkMode, textSize, brightness, newTheme)
   }
 
   return (
