@@ -11,6 +11,7 @@ import Analytics from './pages/Analytics'
 import Family from './pages/Family'      
 import Settings from './pages/Settings'
 import BottomNav from './components/BottomNav'
+import Accessibility from './pages/Accessibility'
 
 function App() {
   const [session, setSession] = useState(null)
@@ -34,6 +35,7 @@ function App() {
           <Route path="/analytics" element={session ? <Analytics /> : <Navigate to="/" />} />
           <Route path="/family" element={session ? <Family /> : <Navigate to="/" />} />
           <Route path="/settings" element={session ? <Settings /> : <Navigate to="/" />} />
+          <Route path="/settings/accessibility" element={session ? <Accessibility /> : <Navigate to="/" />} />
         </Routes>
       </div>
 
