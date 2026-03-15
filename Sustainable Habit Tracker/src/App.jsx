@@ -17,28 +17,10 @@ function App() {
   const [session, setSession] = useState(null)
 
   useEffect(() => {
-  supabase.auth.getSession().then(({ data: { session } }) => {
-    setSession(session)
-  })
-
-  const { data: { subscription } } =
-    supabase.auth.onAuthStateChange((_event, session) =>
-      setSession(session)
-    )
-
-  const savedDark = localStorage.getItem('darkMode') === 'true'
-  const savedSize = Number(localStorage.getItem('textSize')) || 16
-  const savedBrightness = Number(localStorage.getItem('brightness')) || 100
-  const savedTheme = localStorage.getItem('theme') || 'green'
-
-  document.body.classList.toggle('dark-mode', savedDark)
-  document.documentElement.style.fontSize = `${savedSize}px`
-  document.body.style.filter = `brightness(${savedBrightness}%)`
-
-  document.body.classList.add(`theme-${savedTheme}`)
-
-  return () => subscription.unsubscribe()
-}, [])
+    supabase.auth.getSession().then(({ data: { session } }) => setSession(session))
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => setSession(session))
+    return () => subscription.unsubscribe()
+  }, [])
 
   return (
     <BrowserRouter>
