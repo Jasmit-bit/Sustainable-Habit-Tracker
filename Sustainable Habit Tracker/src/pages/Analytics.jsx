@@ -19,7 +19,7 @@ export default function Analytics() {
 
       const {data: logsData} = await supabase
         .from('habit_logs')
-        .select('*')
+        .select('*', habit(habit_name))
         .eq('user_id', user.id);
         
       setHabitLogs(logsData);
@@ -54,6 +54,29 @@ export default function Analytics() {
     }
   }
 
+  //smart activity prediction
+  //for now - will only focus on predicting the activity based on frequently logged habits but can progress into day/time based prediction at a later stage
+  function predictActivity(logs) {
+    
+    if (logs.length == 0) return 'No habits logged yet. Visit the Habit Log page to start!';
+
+    const freqs = logs.reduce((count, current) => {
+      const habitName = current.habit.habit_name;
+      count[habitName] = (count[habitName] || 0) + 1;
+      return count;
+    }, {})
+
+    nameArray = Object.keys(freqs);
+    
+    let mostFrequent = nameArray[0];
+    for (let i = 1; i < nameArray.length; i++) {
+      if (freqs[nameArray[i]] > freqs[mostFrequent]) {
+        mostFrequent = nameArray[i];
+      }
+    }
+    return mostFrequent;
+  }
+
   //check if in loading screen - styled to match code on other pages for consistency
   if (loading) {
       return <div className="loading-screen">Loading..</div>;
@@ -66,8 +89,10 @@ export default function Analytics() {
       {error && <div>{errorMessage}</div>}
 
       <h1> Analytics: </h1>
-      <p>Total CO2 Saved: {calculateCO2Saved(habitLogs)}</p>
-      <p>Total Plastic Saved: {calculatePlasticSaved(habitLogs)}</p>
+      <p>Total CO2 Saved: {calculateCO2Saved(habitLogs)} kg </p>
+      <p>Total Plastic Saved: {calculatePlasticSaved(habitLogs)} kg </p>
+      <p>Total Habits Logged: {habitLogs.length}</p>
+      <p>Suggested Habit Log: {predictActivity(habitLogs)}</p>
     </div>
   )
 }
