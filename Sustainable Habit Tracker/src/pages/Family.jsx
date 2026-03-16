@@ -3,24 +3,22 @@ import {supabase} from '../supabaseClient';
 import './Family.css';
 
 export default function Family() {
+
+  // base variables
   const [loading, setLoading] = useState(true);
   const [hasHousehold, setHasHousehold] = useState(false); 
   const [householdName, setHouseholdName] = useState('');
   const [inviteCode, setInviteCode] = useState(''); 
   const [message, setMessage] = useState('');
   const [error, setError] = useState(false);
-
   // variables for creating the household only
   const [isCreating, setIsCreating] = useState(false);
   const [newHouseholdName, setNewHouseholdName] = useState('');
-
   // variable used for joining only
   const [isJoining, setIsJoining] = useState(false);
   const [joinCode, setJoinCode] = useState('');
-
   //list for holding all the family membs for the dashboard
   const[members, setMembers] = useState([]);
-
   // goal setting variables 
   const [co2Goal, setCo2Goal] = useState(0);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -51,6 +49,70 @@ export default function Family() {
     {
       setMembers(list);
     }
+  }
+
+  // the achievement share feature
+
+  async function shareProgress()
+  {
+    // because the list I saved for the leaderboard is ordered I can just get their position by going through the members list
+    let userPosition = -1;
+
+    for(let i = 0;  i<members.length; i++)
+    {
+      if(members[i].id === currentUserId)
+      {
+        userPosition = i;
+        break;
+      }
+    }
+
+    if(userPosition === -1)
+    {
+      console.log("Issue  please fix the code"); // error message while im coding if i see this it probably means that the user isnt loaded yet
+      return;
+    }
+
+    const userStats = members[userPosition];
+    userPosition++;// need to account for the lists starting at 0
+    const saved = userStats.co2_saved;
+
+    const textToShare = `I have saved ${saved} kg of CO2 this month and I'm currently rank #${userPosition} in my household on the Sustainable Habit Tracker App! Can you beat me? Message me to get my family code, lets Compete!!!`
+
+    // most new browsers have the sharing feature built in so in theory this should bring the pop up screen with the socials
+    if(navigator.share)
+    {
+      try
+      {
+        await navigator.share({
+          title: 'My Eco Progress',
+          text : textToShare
+        });
+      }
+      catch(error)
+      {
+        console.log("Sharing cancelled or failed :", error);
+      }
+    }
+    else
+    { 
+      // if its not a new browser being used just save it to the clipboard
+       try
+       {
+        await navigator.clipboard.writeText(textToShare);
+        alert("Progress copied to clipboard.")
+       }
+       catch(error)
+       {
+        alert("Failed to copy text.")
+
+       }
+
+    }
+
+
+
+
   }
 
  async function updateGoal(e) {
@@ -366,15 +428,17 @@ export default function Family() {
           </div>
 
           <div className="members-section">
-            <h3>Family Members</h3>
+            <div className="members-section-header">
+              <h3>Family Members</h3>
+              <button className="share-btn" onClick={shareProgress}>
+                Share My Rank
+              </button>
+            </div>
             {members.length > 0 ? (
               <ul className="members-list">
                 {members.map((member, index) => {
-                  // 1. Safely grab the saved amount and the goal
                   const saved = member.co2_saved || 0;
                   const goal = co2Goal || 0;
-                  
-                  // 2. Calculate the percentage (prevents dividing by zero)
                   const progressPercent = goal > 0 ? Math.min((saved / goal) * 100, 100) : 0;
 
                   const isCurrentUser = (member.id ===currentUserId);
@@ -389,7 +453,6 @@ export default function Family() {
                         <div className="member-info-header">
                           <span className="member-name">
                             {member.name} 
-                            {/* Optional: Add a little " (You)" badge */}
                             {isCurrentUser && <span className="you-badge">(You)</span>}
                           </span> 
                           <span className="member-username">@{member.username}</span>

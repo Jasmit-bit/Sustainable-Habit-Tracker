@@ -307,3 +307,28 @@ input[type="number"] {
   padding: 2px 6px;
   border-radius: 12px;
 }
+
+.members-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.members-section-header h3 {
+  margin: 0; 
+}
+
+.share-btn {
+  margin: 0;
+  padding: 8px 16px;
+  font-size: 0.9rem;
+  background: linear-gradient(135deg, #10b981, #059669);
+  width: auto;
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+}
+
+.share-btn:hover {
+  background: linear-gradient(135deg, #059669, #047857);
+  transform: translateY(-2px);
+}
