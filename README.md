@@ -48,4 +48,4 @@ npm install
 npm run dev
 ```
 
-**5. Open in Your Browser** After running the start command, your terminal will give you a local link (usually `http://localhost:5173` or `http://localhost:3000`). Simply `Ctrl + Click` (or `Cmd + Click` on Mac) the link in the terminal to open the app in your browser and then use the web app.
+**5. Open in Your Browser** After running the start command, your terminal will give you a local link (usually `http://localhost:5173` or `http://localhost:3000`). `Ctrl + Click` (or `Cmd + Click` on Mac) the link in the terminal to open the app in your browser and then use the web app.
