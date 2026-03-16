@@ -19,6 +19,7 @@ export default function Analytics() {
       .eq('user_id', user.id);
 
     setHabitLogs(data);
+    setLoading(false);
   }
 
   //pass the logs into the function to calculate the running total of all co2 saved in order to display "lifetime" stats
@@ -35,12 +36,17 @@ export default function Analytics() {
     }, 0)
   }
 
-
+  //check if in loading screen - styled to match code on other pages for consistency
+  if (loading) {
+      return <div className="loading-screen">Loading..</div>;
+    }
 
 
   return (
     <div style={{ padding: '20px', textAlign: 'center' }}>
-      <h1> Analytics</h1>
+      <h1> Analytics: </h1>
+      <p>Total CO2 Saved: {calculateCO2Saved(habitLogs)}</p>
+      <p>Total Plastic Saved: {calculatePlasticSaved(habitLogs)}</p>
     </div>
   )
 }
