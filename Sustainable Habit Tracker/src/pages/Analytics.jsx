@@ -9,6 +9,7 @@ export default function Analytics() {
     fetchLogs()
 }, [])
 
+  //fetch the habit log data from supabase 
   async function fetchLogs() {
     const {data: {user}} = await supabase.auth.getUser();
 
@@ -20,6 +21,19 @@ export default function Analytics() {
     setHabitLogs(data);
   }
 
+  //pass the logs into the function to calculate the running total of all co2 saved in order to display "lifetime" stats
+  function calculateCO2Saved(logs) {
+    return logs.reduce((total, current) => {
+      return total + current.total_co2_saved;
+    }, 0)
+  }
+
+  //do the same for total plastic saved
+  function calculatePlasticSaved(logs) {
+    return logs.reduce((total, current) => {
+      return total + current.total_plastic_saved;
+    }, 0)
+  }
 
 
 
