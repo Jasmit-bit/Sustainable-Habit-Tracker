@@ -21,11 +21,13 @@ export default function Family() {
   const[members, setMembers] = useState([]);
   // goal setting variables 
   const [co2Goal, setCo2Goal] = useState(0);
+  const [draftGoal,setDraftGoal] = useState('');// I was having a bug where the even if i press cancel it would already update the goal
   const [isAdmin, setIsAdmin] = useState(false);
   const [isEditingGoal, setIsEditingGoal] = useState(false);
 
   // I want to to make the leaderboard a bit more clearer and I want to highlight the current user so I need to know who the current user is 
   const[currentUserId,setCurrentUserId] = useState(null);
+  
 
   useEffect(() => {
     checkHouseExists();
@@ -117,20 +119,34 @@ export default function Family() {
 
  async function updateGoal(e) {
     e.preventDefault();
-    try {
+
+    const goalNumber = Number(draftGoal);
+      if(goalNumber<=0) // in theory you should never be able to hit this if statement because I added the html constraint but just in case
+      {
+        setError(true);
+        setMessage("Please enter a positive goal");
+        return;
+      }
+      else if(goalNumber>=1000000)
+      {
+        setError(true);
+        setMessage("Please set a realistic goal");
+        return;
+      }
+
+   try {
       setLoading(true);
+      setError(false); 
       const { data: { user } } = await supabase.auth.getUser();
-      
       const { error } = await supabase
         .from('households')
-        .update({ co2_goal: Number(co2Goal) })
+        .update({ co2_goal: goalNumber })
         .eq('admin_id', user.id); 
 
       if (error) throw error;
 
-      setCo2Goal(co2Goal);
+      setCo2Goal(goalNumber);
       setIsEditingGoal(false);
-
     } catch (error) {
       setError(true);
       setMessage(error.message);
@@ -270,6 +286,7 @@ export default function Family() {
         setInviteCode(newHousehold.inviteCode);
         setHasHousehold(true);
         setIsCreating(false);
+        setIsAdmin(true);
         await getMembers(newHousehold.id)
     }
     catch(error)
@@ -402,6 +419,12 @@ export default function Family() {
           <div className="dashboard-header">
             <h2>{householdName}</h2>
             <p>Invite Code: <span className="invite-badge">{inviteCode}</span></p>
+            <button
+              onClick={() =>
+              {navigator.clipboard.writeText(inviteCode);
+                alert("Invite code copied!");
+              }}
+            >Copy</button>
           </div>
 
           <div className="co2-goal-section">
@@ -411,8 +434,9 @@ export default function Family() {
               <form onSubmit={updateGoal} className="goal-form">
                 <input 
                   type="number" 
-                  value={co2Goal}
-                  onChange={(e) => setCo2Goal(e.target.value)}
+                  min="1"
+                  value={draftGoal}
+                  onChange={(e) => setDraftGoal(e.target.value)}
                 />
                 <button type="submit">Save</button>
                 <button type="button" className="cancel-btn" onClick={() => setIsEditingGoal(false)}>Cancel</button>
@@ -421,7 +445,12 @@ export default function Family() {
               <div className="goal-display">
                 <p className="goal-number">{co2Goal} kg</p>
                 {isAdmin && (
-                  <button onClick={() => setIsEditingGoal(true)}>Edit Goal</button>
+                  <button onClick={() => {
+                    setDraftGoal(co2Goal); 
+                    setIsEditingGoal(true); 
+                  }}>
+                    Edit Goal
+                  </button>
                 )}
               </div>
             )}
