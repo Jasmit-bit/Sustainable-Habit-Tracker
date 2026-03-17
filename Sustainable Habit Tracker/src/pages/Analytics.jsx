@@ -1,5 +1,6 @@
 import {useState, useEffect} from 'react';
 import {supabase} from '../supabaseClient';
+import './Analytics.css';
 
 export default function Analytics() {
   const [habitLogs, setHabitLogs] = useState([]);
