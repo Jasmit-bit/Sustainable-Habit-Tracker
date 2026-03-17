@@ -55,18 +55,57 @@ export default function Analytics() {
   }
 
   //smart activity prediction
-  //for now - will only focus on predicting the activity based on frequently logged habits but can progress into day/time based prediction at a later stage
+  //updated function to suggest activity based on current time of day
   function predictActivity(logs) {
     
     if (logs.length == 0) return 'No habits logged yet. Visit the Habit Log page to start!';
 
-    const freqs = logs.reduce((count, current) => {
+    //records the current date/time as the app is being used 
+    const instant = new Date();
+    const currentHour = instant.getHours();
+    let time = '';
+
+    if (currentHour >= 6 && currentHour < 12) {
+      time = 'morning';
+    }
+    else if (currentHour >= 12 && currentHour < 18) {
+      time = 'afternoon';
+    }
+    else {
+      time = 'night';
+    }
+
+    //filter for the database logs based on the current time that the app is being used
+    const filteredByTime = logs.filter( log => {
+      const logTimestamp = new Date(log.timestamp).getHours();
+
+      if (time == 'morning') {
+        return logTimestamp >= 6 && logTimestamp < 12;
+      }
+      else if (time == 'afternoon') {
+        return logTimestamp >= 12 && logTimestamp < 18;
+      }
+      else {
+        return logTimestamp >= 18 || logTimestamp < 6;
+      }
+    })
+
+    //handling what to do if there aren't any logs after the filter 
+    let useLogs;
+    if (filteredByTime.length > 0) {
+      useLogs = filteredByTime;
+    } else {
+      useLogs = logs;
+    }
+
+    //frequency counting based on whatever set of logs we are using
+    const freqs = useLogs.reduce((count, current) => {
       const habitName = current.habit.habit_name;
       count[habitName] = (count[habitName] || 0) + 1;
       return count;
     }, {})
 
-    nameArray = Object.keys(freqs);
+    const nameArray = Object.keys(freqs);
     
     let mostFrequent = nameArray[0];
     for (let i = 1; i < nameArray.length; i++) {
@@ -75,8 +114,9 @@ export default function Analytics() {
       }
     }
     return mostFrequent;
+    
   }
-
+ 
   //check if in loading screen - styled to match code on other pages for consistency
   if (loading) {
       return <div className="loading-screen">Loading..</div>;
