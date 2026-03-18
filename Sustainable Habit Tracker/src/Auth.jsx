@@ -69,6 +69,11 @@ export default function Auth() {
         setIsError(true);
         return
       }
+      if (usernameStatus === 'taken' || usernameStatus === 'checking') {
+        setMessage('Error: Please choose an available username.');
+        setIsError(true);
+        return;
+      }
       if (!isPasswordValid) {
         setMessage('Error: Please ensure your password meets all requirements.')
         setIsError(true)
