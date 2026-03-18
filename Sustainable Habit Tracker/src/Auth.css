@@ -1,0 +1,42 @@
+/* --- Auth Page Dynamic Styles --- */
+
+.password-checklist {
+  text-align: left;
+  margin: 5px 0 15px 5px;
+  font-size: 0.85rem;
+}
+
+/* Base style for the checklist items */
+.checklist-item {
+  margin-bottom: 4px;
+  transition: color 0.3s ease; /* Adds a smooth fade when changing colors */
+}
+
+/* Dynamic color classes */
+.text-valid {
+  color: #2E8B57; /* Green */
+}
+
+.text-invalid {
+  color: #d9534f; /* Red */
+}
+
+/* Auth Message Styles */
+.auth-message {
+  font-weight: bold;
+  margin-top: 15px;
+  margin-bottom: 0;
+}
+
+/* Toggle Link Styles */
+.toggle-link {
+  cursor: pointer;
+  color: #2E8B57;
+  margin-top: 20px;
+  transition: opacity 0.2s ease;
+}
+
+.toggle-link:hover {
+  text-decoration: underline;
+  opacity: 0.8;
+}

@@ -75,8 +75,9 @@ button:active {
   background-color: #6b7280;
 }
 
-input[type="text"],
-input[type="number"] {
+/* --- Locked exclusively to the Family page! --- */
+.family-container input[type="text"],
+.family-container input[type="number"] {
   padding: 12px;
   margin: 8px 0;
   border: 1px solid #d1d5db;
@@ -84,14 +85,14 @@ input[type="number"] {
   font-size: 1rem;
 }
 
-input[type="text"] {
+.family-container input[type="text"] {
   width: 80%;
   max-width: 300px;
 }
 
-input[type="number"] {
+.family-container input[type="number"] {
   width: 150px;
-  margin: 0; /* Reset margin for the inline form */
+  margin: 0; 
 }
 
 /* --- Upgraded Dashboard Styling --- */
