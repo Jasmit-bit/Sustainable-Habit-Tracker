@@ -59,8 +59,6 @@ export default function Analytics() {
   //smart activity prediction
   //updated function to suggest activity based on current time of day
   function predictActivity(logs) {
-    
-    if (logs.length == 0) return 'No habits logged yet. Visit the Habit Log page to start!';
 
     //records the current date/time as the app is being used 
     const instant = new Date();

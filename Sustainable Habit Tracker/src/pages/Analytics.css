@@ -46,7 +46,7 @@
 }
 
 .analytics-header p {
-    font-size: 1.1rem;
+    font-size: 1.5rem;
     font-weight: lighter;
     color: #4ead68;
 }
@@ -82,7 +82,7 @@
 
 .predict-card {
     background-color: #8ce69b;
-    border: 2px dashed #07571c;
+    border: 2px #07571c;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15); 
     padding: 20px;
@@ -109,6 +109,7 @@
   border: none;
   padding: 12px 24px;
   margin: 8px;
+  margin-top: 10px;
   border-radius: 6px;
   font-size: 1rem;
   font-weight: 500;
