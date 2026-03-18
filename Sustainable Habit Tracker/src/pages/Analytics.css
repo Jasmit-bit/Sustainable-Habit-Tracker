@@ -100,3 +100,22 @@
     font-size: 1rem;
     color: #666;
 }
+
+/* button from other css files */
+
+.analytics-button {
+  background-color: #3b82f6; 
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  margin: 8px;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.analytics-button:hover {
+    background-color: #88ac91;
+}

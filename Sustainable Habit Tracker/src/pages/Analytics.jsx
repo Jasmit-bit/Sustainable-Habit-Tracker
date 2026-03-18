@@ -1,6 +1,7 @@
 import {useState, useEffect} from 'react';
 import {supabase} from '../supabaseClient';
 import './Analytics.css';
+import {Link} from 'react-router-dom'
 
 export default function Analytics() {
   const [habitLogs, setHabitLogs] = useState([]);
@@ -152,9 +153,18 @@ export default function Analytics() {
       {/* smart activity prediction */}
       <div className="predict-card">
         <h3> Quick Log </h3>
-        <p> {predictActivity(habitLogs)} </p>
+        {habitLogs.length === 0 ? (
+          <>
+            <p> No habits logged yet!</p>
+            <Link to="/log-habit" className="analytics-button">Go to Habit Log </Link>
+          </>
+        ) : (
+          <>
+            <p>{predictActivity(habitLogs)}</p>
+            {/* Add logic here to quick add a habit once habit log page is completed */}
+          </>
+        )}
+        </div>
       </div>
-
-    </div>
   )
 }
