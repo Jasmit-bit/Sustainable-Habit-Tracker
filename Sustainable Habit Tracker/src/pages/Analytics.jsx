@@ -20,7 +20,7 @@ export default function Analytics() {
 
       const {data: logsData} = await supabase
         .from('habit_logs')
-        .select('*', habit(habit_name))
+        .select('*, habit(habit_name)')
         .eq('user_id', user.id);
         
       setHabitLogs(logsData);
@@ -117,23 +117,44 @@ export default function Analytics() {
     return mostFrequent;
     
   }
- 
-  //check if in loading screen - styled to match code on other pages for consistency
-  if (loading) {
-      return <div className="loading-screen">Loading..</div>;
-    }
-
 
   return (
-    <div style={{ padding: '20px', textAlign: 'center' }}>
-      {/* return for error message */}
-      {error && <div>{errorMessage}</div>}
+    <div className="analytics-container">
 
-      <h1> Analytics: </h1>
-      <p>Total CO2 Saved: {calculateCO2Saved(habitLogs)} kg </p>
-      <p>Total Plastic Saved: {calculatePlasticSaved(habitLogs)} kg </p>
-      <p>Total Habits Logged: {habitLogs.length}</p>
-      <p>Suggested Habit Log: {predictActivity(habitLogs)}</p>
+      {/* error message */}
+      {error && <div className="error-message"> {errorMessage} </div>}
+
+      {/* page header */}
+      <div className="analytics-header">
+        <h2> Your Analytics 📊 </h2>
+        <p> Summary of your lifetime stats so far! </p>
+      </div>
+
+      {/* stats cards */}
+      <div className="stats-grid">
+
+        <div className="stats-card">
+          <h3> {calculateCO2Saved(habitLogs)} kg </h3>
+          <p> CO_2 Saved </p>
+        </div>
+
+        <div className="stats-card">
+          <h3> {calculatePlasticSaved(habitLogs)} kg </h3>
+          <p> Plastic Saved </p>
+        </div>
+
+        <div className="stats-card">
+          <h3> {habitLogs.length} </h3>
+          <p> Total Habits Logged </p>
+        </div>
+      </div>
+
+      {/* smart activity prediction */}
+      <div className="predict-card">
+        <h3> Quick Log </h3>
+        <p> {predictActivity(habitLogs)} </p>
+      </div>
+
     </div>
   )
 }

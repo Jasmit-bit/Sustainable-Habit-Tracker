@@ -46,7 +46,7 @@
 }
 
 .analytics-header p {
-    font-size: 1rem;
+    font-size: 1.1rem;
     font-weight: lighter;
     color: #4ead68;
 }
@@ -85,4 +85,18 @@
     border: 2px dashed #07571c;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15); 
+    padding: 20px;
+    margin-top: 20px;
+}
+
+.predict-card h3 {
+    color: #07571c;
+    font-weight: bolder;
+    font-size: 1.2rem;
+    text-align: center;
+}
+
+.predict-card p {
+    font-size: 1rem;
+    color: #666;
 }
