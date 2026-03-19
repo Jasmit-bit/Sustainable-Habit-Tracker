@@ -8,7 +8,7 @@ export async function logNormalHabit(userID, habitID) {
     const totalPlastic = habitData[0].plasticSaved;
 
     // Inserting into habits_log table
-    const { data, error } = await supabase
+    const { data, error:logError } = await supabase
     .from('habit_logs')
     .insert({
         user_id: userID,
@@ -17,19 +17,37 @@ export async function logNormalHabit(userID, habitID) {
         total_plastic_saved: totalPlastic
     }
     )
-    
-    return { data, error };
-}
+    if (logError) return { error: logError };
+
+
+    // philip's code didnt update the profiles table so I am going to do that here
+    // first I pull from the table then i update it and push it back
+    const { data: user } = await supabase
+        .from('profiles')
+        .select('co2_saved')
+        .eq('id', userID)
+        .single();
+
+    // js was breaking and adding a 0.000000002 so this fixes that
+    const newTotal = Number(((user.co2_saved || 0) + totalCo2).toFixed(2));
+    const { error: updateError } = await supabase
+    .from('profiles')
+    .update({ co2_saved: newTotal })
+    .eq('id', userID);
+
+    return { error: updateError };
+}   
 
 export async function logTransportHabit(userID, habitID, distance) {
     // Calculating totalCo2 and plasticSaved
     const { data: habitData, error: habitError } = await getHabit(habitID);
 
-    const totalCo2 = habitData[0].co2Saved * distance;
+    // js was breaking and adding a 0.000000002 so this fixes that
+    const totalCo2 = Number((habitData[0].co2Saved * distance).toFixed(2));;
     const totalPlastic = habitData[0].plasticSaved;
 
     // Inserting into habits_log table
-    const { data, error } = await supabase
+    const { data, error:logError } = await supabase
     .from('habit_logs')
     .insert({
         user_id: userID,
@@ -39,7 +57,26 @@ export async function logTransportHabit(userID, habitID, distance) {
     }
     )
     
-    return { data, error };
+    if(logError)
+    {
+        return {error: logError};
+    }
+    
+    // philip's code didnt update the profiles table so I am going to do that here
+    // first I pull from the table then i update it and push it back
+    const { data: user } = await supabase
+        .from('profiles')
+        .select('co2_saved')
+        .eq('id', userID)
+        .single();
+
+    const newTotal = Number(((user.co2_saved || 0) + totalCo2).toFixed(2));
+    const { error: updateError } = await supabase
+    .from('profiles')
+    .update({ co2_saved: newTotal })
+    .eq('id', userID);
+
+    return { error: updateError };
 }
 
 export async function getHabit(habitID) {
