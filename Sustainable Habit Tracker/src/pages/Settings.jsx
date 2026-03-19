@@ -114,6 +114,11 @@ export default function Settings() {
         Open Accessibility Settings
       </button>
 
+      <h2 style={{ marginTop: '25px' }}>History</h2>
+      <button onClick={() => navigate('/settings/habit-history')}>
+        View Habit History
+      </button>
+
       <h2 style={{ marginTop: '35px' }}>Account</h2>
       <button className="logout-btn" onClick={handleLogout}>
         Log Out
