@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 export default function Accessibility() {
+  const navigate = useNavigate()
   const [darkMode, setDarkMode] = useState(false)
   const [textSize, setTextSize] = useState(16)
   const [brightness, setBrightness] = useState(100)
@@ -26,8 +28,6 @@ export default function Accessibility() {
     document.body.classList.toggle('dark-mode', dark)
     document.documentElement.style.fontSize = `${size}px`
 
-   // changed from filter to an overlay because the filter was breaking the ergonomic thumb zone
-
     let overlay = document.getElementById('brightness-overlay')
     if (!overlay) {
       overlay = document.createElement('div')
@@ -42,7 +42,6 @@ export default function Accessibility() {
       document.body.appendChild(overlay)
     }
 
-    // work out how much darkness opacity needs to be added
     const darknessOpacity = 1 - (bright / 100);
     overlay.style.backgroundColor = `rgba(0, 0, 0, ${darknessOpacity})`
     document.body.classList.remove(
@@ -85,6 +84,13 @@ export default function Accessibility() {
   return (
     <div className="settings-container">
       <h1>Accessibility</h1>
+
+      <button 
+        className="back-btn" 
+        onClick={() => navigate('/settings')}
+      >
+        ← Back to Settings
+      </button>
 
       <h3>Dark Mode</h3>
       <button onClick={handleDarkMode}>

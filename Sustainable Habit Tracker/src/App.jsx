@@ -12,15 +12,49 @@ import Family from './pages/Family'
 import Settings from './pages/Settings'
 import BottomNav from './components/BottomNav'
 import Accessibility from './pages/Accessibility'
+import HabitHistory from './components/HabitHistory'
 
 function App() {
   const [session, setSession] = useState(null)
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => setSession(session))
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => setSession(session))
-    return () => subscription.unsubscribe()
-  }, [])
+  supabase.auth.getSession().then(({ data: { session } }) => {
+    setSession(session)
+  })
+
+  const { data: { subscription } } =
+    supabase.auth.onAuthStateChange((_event, session) =>
+      setSession(session)
+    )
+
+  const savedDark = localStorage.getItem('darkMode') === 'true'
+  const savedSize = Number(localStorage.getItem('textSize')) || 16
+  const savedTheme = localStorage.getItem('theme') || 'green'
+  const savedBrightness = Number(localStorage.getItem('brightness')) || 100
+
+let overlay = document.getElementById('brightness-overlay')
+if (!overlay) {
+  overlay = document.createElement('div')
+  overlay.id = 'brightness-overlay'
+  overlay.style.position = 'fixed'
+  overlay.style.top = '0'
+  overlay.style.left = '0'
+  overlay.style.width = '100vw'
+  overlay.style.height = '100vh'
+  overlay.style.pointerEvents = 'none'
+  overlay.style.zIndex = '9999'
+  document.body.appendChild(overlay)
+}
+
+const darknessOpacity = 1 - (savedBrightness / 100)
+overlay.style.backgroundColor = `rgba(0, 0, 0, ${darknessOpacity})`
+  document.body.classList.toggle('dark-mode', savedDark)
+  document.documentElement.style.fontSize = `${savedSize}px`
+
+  document.body.classList.add(`theme-${savedTheme}`)
+
+  return () => subscription.unsubscribe()
+}, [])
 
   return (
     <BrowserRouter>
@@ -36,6 +70,7 @@ function App() {
           <Route path="/family" element={session ? <Family /> : <Navigate to="/" />} />
           <Route path="/settings" element={session ? <Settings /> : <Navigate to="/" />} />
           <Route path="/settings/accessibility" element={session ? <Accessibility /> : <Navigate to="/" />} />
+          <Route path="/settings/habit-history" element={session ? <HabitHistory /> : <Navigate to="/" />} />
         </Routes>
       </div>
 
