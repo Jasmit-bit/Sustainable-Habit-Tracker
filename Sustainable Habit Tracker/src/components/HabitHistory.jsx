@@ -108,7 +108,7 @@ export default function HabitHistory() {
                   )}
                   {entry.total_plastic_saved && (
                     <span className="stat">
-                      ♻️ Plastic Saved: {entry.total_plastic_saved.toFixed(2)} kg
+                      ♻️ Plastic Saved: {entry.total_plastic_saved.toFixed(2)} g
                     </span>
                   )}
                 </div>
