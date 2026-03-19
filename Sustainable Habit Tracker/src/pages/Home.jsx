@@ -1,7 +1,7 @@
 import { supabase } from '../supabaseClient'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-// all emojis we have used have come from emojipedia.org so full credits for those go to them
+// emojis used have come from emojipedia.org so full credits for those go to them
 export default function Home() {
   const [userName, setUserName] = useState('')
   const [tip, setTip] = useState('')

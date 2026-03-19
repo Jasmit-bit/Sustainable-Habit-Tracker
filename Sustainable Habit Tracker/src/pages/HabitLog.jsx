@@ -143,7 +143,7 @@ function HabitLog() {
               checked={selectedCategory === 'transport'}
               onChange={() => handleCategoryChange('transport')}
             />
-            🚲 Transport
+            🚌 Transport
           </label>
           
           <label className={`category-card ${selectedCategory === 'shopping' ? 'active' : ''}`}>
