@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getHabitsByCategory, logNormalHabit, logTransportHabit } from '../services/habitlog.js';
+import { getPredictedActivities } from '../services/activityPrediction';
 import { supabase } from '../supabaseClient';
 import './HabitLog.css'; 
 
@@ -16,6 +17,9 @@ function HabitLog() {
   // as text on the screen instead of alerts
   const [message, setMessage] = useState('');
   const [isError, setIsError] = useState(false);
+  const [predictedHabits, setPredictedHabits] = useState([]);
+  const [predictedError, setPredictedError] = useState('');
+  const [predictedLoading, setPredictedLoading] = useState(false);
 
 
   // Get current user on component mount
@@ -30,6 +34,22 @@ function HabitLog() {
     };
     getUser();
   }, [navigate]);
+
+  useEffect(() => {
+    const fetchPredictions = async () => {
+      if (!userId) return;
+      setPredictedError('');
+      setPredictedLoading(true);
+      const { data, error } = await getPredictedActivities(userId);
+      if (error) {
+        setPredictedError(error);
+      } else {
+        setPredictedHabits(data || []);
+      }
+      setPredictedLoading(false);
+    };
+    fetchPredictions();
+  }, [userId]);
 
   // Fetch habits when category changes
   useEffect(() => {
@@ -109,6 +129,47 @@ function HabitLog() {
 
   };
 
+  const handleQuickPrediction = async (habit) => {
+    if (!userId || !habit) {
+      return;
+    }
+
+    try {
+      let result;
+      if (habit.category === 'transport') {
+        const distanceValue = window.prompt(`Enter travel distance for ${habit.name} (km):`, '1.0');
+        if (!distanceValue || isNaN(distanceValue) || Number(distanceValue) <= 0) {
+          setMessage('Please enter a valid distance to log predicted transport habit.');
+          setIsError(true);
+          return;
+        }
+        result = await logTransportHabit(userId, habit.id, Number(distanceValue));
+      } else {
+        result = await logNormalHabit(userId, habit.id);
+      }
+
+      if (result.error) {
+        setMessage('Failed to log predicted habit. Please try again.');
+        setIsError(true);
+      } else {
+        setMessage('Habit logged successfully! ✅');
+        setIsError(false);
+        setDistance('');
+        setSelectedHabit('');
+
+        // refresh category habits and predictions after logging
+        const { data, error } = await getPredictedActivities(userId);
+        if (!error) setPredictedHabits(data || []);
+      }
+    } catch (error) {
+      setMessage('Unexpected error while logging predicted habit.');
+      setIsError(true);
+      console.error(error);
+    }
+
+    setTimeout(() => setMessage(''), 3000);
+  };
+
   const handleCancel = () => {
     navigate('/home');
   };
@@ -118,6 +179,33 @@ function HabitLog() {
   return (
     <div className="habit-container">
       <h1 className="habit-header">Log Activity</h1>
+
+      {/* Smart Suggestion Box */}
+      <div className="habit-suggestion-card" style={{ marginBottom: '20px', border: '1px solid #CBD5E1', borderRadius: '12px', backgroundColor: '#ECFDF5', padding: '14px', textAlign: 'center' }}>
+        <h2 style={{ margin: '0 0 12px', fontSize: '1.1rem', color: '#065F46' }}>🤖 Smart Suggestions</h2>
+        {predictedLoading ? (
+          <p style={{ margin: 0 }}>Loading suggestions...</p>
+        ) : predictedError ? (
+          <p style={{ margin: 0, color: '#DC2626' }}>{predictedError}</p>
+        ) : predictedHabits.length === 0 ? (
+          <p style={{ margin: 0 }}>No suggestions yet. Log habits to get suggestions.</p>
+        ) : (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', alignItems: 'center' }}>
+            {predictedHabits.slice(0, 3).map((habit, index) => (
+              <div key={habit.id} style={{ width: '100%', maxWidth: '450px', textAlign: 'center', padding: '6px 8px', backgroundColor: 'white', borderRadius: '8px', border: '1px solid #E5E7EB' }}>
+                <p style={{ margin: '0 0 4px', fontWeight: '600', color: '#065F46', fontSize: '0.9rem' }}>{habit.name}</p>
+                <button
+                  onClick={() => handleQuickPrediction(habit)}
+                  style={{ border: 'none', borderRadius: '6px', background: '#10B981', color: 'white', padding: '6px 12px', cursor: 'pointer', fontSize: '0.85rem', width: '70%' }}
+                >
+                  Log it now
+                </button>
+                <p style={{ margin: '6px 0 0', color: '#6B7280', fontSize: '0.78rem' }}>Logged {habit.completions} times</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* 1. Modern Category Selection Cards */}
       <div className="habit-section">
