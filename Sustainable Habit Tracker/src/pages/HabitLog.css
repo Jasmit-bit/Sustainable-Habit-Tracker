@@ -1,0 +1,157 @@
+/* --- HabitLog.css --- */
+
+.habit-container {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  font-family: 'Inter', system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 60vh;
+}
+
+.habit-header {
+  text-align: center;
+  color: #111827;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 25px;
+}
+
+.habit-section {
+  margin-bottom: 25px;
+}
+
+.habit-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 12px;
+  display: block;
+}
+
+/* --- The New Category Cards --- */
+.category-group {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.category-card {
+  flex: 1;
+  text-align: center;
+  padding: 12px 5px;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #6b7280;
+  font-weight: 500;
+  font-size: 0.9rem;
+  background-color: #f9fafb;
+}
+
+/* Hide the actual radio circle */
+.category-card input[type="radio"] {
+  display: none; 
+}
+
+/* When the card is clicked/active */
+.category-card.active {
+  border-color: #10b981;
+  background-color: #ecfdf5;
+  color: #047857;
+  box-shadow: 0 4px 6px rgba(16, 185, 129, 0.1);
+}
+
+.category-card:hover:not(.active) {
+  border-color: #d1d5db;
+  background-color: #f3f4f6;
+}
+
+/* --- Inputs and Selects --- */
+.habit-input,
+.habit-select {
+  width: 100%;
+  padding: 12px 15px;
+  font-size: 1rem;
+  color: #111827;
+  border: 2px solid #e5e7eb;
+  border-radius: 10px;
+  box-sizing: border-box;
+  background-color: #fff;
+  transition: border-color 0.2s ease;
+  cursor: pointer;
+  outline: none;
+}
+
+.habit-input:focus,
+.habit-select:focus {
+  border-color: #10b981;
+}
+
+.habit-select:disabled {
+  background-color: #f3f4f6;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* --- Buttons --- */
+.habit-actions {
+  display: flex;
+  gap: 15px;
+  margin-top: auto;
+  padding-top: 20px;
+}
+
+.btn {
+  flex: 1;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.1s ease, opacity 0.2s ease;
+}
+
+.btn:active {
+  transform: scale(0.98);
+}
+
+.btn-cancel {
+  background-color: #f3f4f6;
+  color: #4b5563;
+}
+
+.btn-cancel:hover {
+  background-color: #e5e7eb;
+}
+
+.btn-save {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.3);
+}
+
+.btn-save:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.btn-save:disabled {
+  background: #d1d5db;
+  color: #9ca3af;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.loading-text {
+  text-align: center;
+  color: #6b7280;
+  font-style: italic;
+  padding: 10px 0;
+}
