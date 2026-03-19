@@ -132,7 +132,7 @@ function HabitLog() {
               checked={selectedCategory === 'food'}
               onChange={() => handleCategoryChange('food')}
             />
-            🍎 Food & Waste
+            🍎 ♻️ Food Waste Recycling
           </label>
           
           <label className={`category-card ${selectedCategory === 'transport' ? 'active' : ''}`}>
@@ -154,7 +154,7 @@ function HabitLog() {
               checked={selectedCategory === 'shopping'}
               onChange={() => handleCategoryChange('shopping')}
             />
-            🛍️ Shopping
+            🛍️ Shopping Alternatives
           </label>
         </div>
       </div>
