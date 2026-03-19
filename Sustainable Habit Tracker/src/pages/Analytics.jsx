@@ -1,7 +1,8 @@
 import {useState, useEffect} from 'react';
 import {supabase} from '../supabaseClient';
 import './Analytics.css';
-import {Link} from 'react-router-dom'
+import {Link} from 'react-router-dom';
+import { logNormalHabit, logTransportHabit } from '../services/habitlog.js';
 
 export default function Analytics() {
   const [habitLogs, setHabitLogs] = useState([]);
@@ -9,6 +10,12 @@ export default function Analytics() {
 
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+
+  //error message variables for quick log
+  const [quickLogMessage, setQuickLogMessage] = useState('');
+  const [isQuickLogError, setIsQuickLogError] = useState(false);
+
+
 
   useEffect(() => {
     fetchLogs()
@@ -21,7 +28,7 @@ export default function Analytics() {
 
       const {data: logsData} = await supabase
         .from('habit_logs')
-        .select('*, habit(habit_name)')
+        .select('*, habit(id,habit_name,category)') // modified the request to get things i need to log the habit
         .eq('user_id', user.id);
         
       setHabitLogs(logsData);
@@ -34,12 +41,57 @@ export default function Analytics() {
     }
   }
 
+  async function quickLog(habitName)
+  {
+    // first I need to find the specific log from the whole list 
+    setQuickLogMessage('');
+    setIsQuickLogError(false);
+
+    try{
+      const logEntry = habitLogs.find(function(log) {
+        return log.habit && log.habit.habit_name === habitName;
+      });
+      if(!logEntry) return;
+
+      const habitId = logEntry.habit.id;
+      const category = logEntry.habit.category;
+      const { data: { user } } = await supabase.auth.getUser();
+      let result;
+
+      if (category === 'transport') {
+        const distanceStr = window.prompt(`How many kilometers for ${habitName}?`);
+        
+        if (!distanceStr || isNaN(distanceStr) || Number(distanceStr) <= 0) { // if the input isnt valid
+          return; 
+        }
+        result = await logTransportHabit(user.id, habitId, parseFloat(distanceStr));
+      } else {
+        result = await logNormalHabit(user.id, habitId);
+      }
+
+      if (result.error) throw result.error;
+
+      setQuickLogMessage(`✅ Successfully logged ${habitName}!`);
+      setIsQuickLogError(false);
+      
+      fetchLogs(); //after logging i want to update the screen without the user having to refresh the page
+
+      //like before this screen can get cramped so ill make the message dissapear after 3 seconds
+      setTimeout(() => setQuickLogMessage(''), 3000);
+    }
+    catch(error){
+      setQuickLogMessage('❌ Failed to quick log. Please try again.');
+      setIsQuickLogError(true);
+      setTimeout(() => setQuickLogMessage(''), 3000);
+    }
+
+  }
+
   //pass the logs into the function to calculate the running total of all co2 saved in order to display "lifetime" stats
   function calculateCO2Saved(logs) {
     try {
-      return logs.reduce((total, current) => {
-        return total + current.total_co2_saved;
-      }, 0)
+      const total = logs.reduce((sum, current) => sum + current.total_co2_saved, 0);
+      return Number(total.toFixed(2)); // like on the lob habit page this added a small number so I fixed that
     } catch (error) {
       return 0;
     } 
@@ -48,9 +100,8 @@ export default function Analytics() {
   //do the same for total plastic saved
   function calculatePlasticSaved(logs) {
     try {
-      return logs.reduce((total, current) => {
-        return total + current.total_plastic_saved;
-      }, 0)
+      const total = logs.reduce((sum, current) => sum + current.total_plastic_saved, 0);
+      return Number(total.toFixed(2)); // like on the lob habit page this added a small number so I fixed that
     } catch (error) {
       return 0;
     }
@@ -59,6 +110,8 @@ export default function Analytics() {
   //smart activity prediction
   //updated function to suggest activity based on current time of day
   function predictActivity(logs) {
+
+    if (logs.length === 0) return '';
 
     //records the current date/time as the app is being used 
     const instant = new Date();
@@ -117,6 +170,8 @@ export default function Analytics() {
     
   }
 
+  const predictedHabitName = predictActivity(habitLogs);
+
   return (
     <div className="analytics-container">
 
@@ -138,7 +193,7 @@ export default function Analytics() {
         </div>
 
         <div className="stats-card">
-          <h3> {calculatePlasticSaved(habitLogs)} kg </h3>
+          <h3> {calculatePlasticSaved(habitLogs)} g </h3>
           <p> Plastic Saved </p>
         </div>
 
@@ -150,7 +205,16 @@ export default function Analytics() {
 
       {/* smart activity prediction */}
       <div className="predict-card">
-        <h3> Quick Log </h3>
+        <h3> 🧠 Smart Quick Log </h3>
+        {quickLogMessage && (// shows the error/sucess message depending on logerror status
+          <div style={{ 
+            marginBottom: '10px', 
+            fontWeight: '600', 
+            color: isQuickLogError ? '#b91c1c' : '#047857' 
+          }}>
+            {quickLogMessage}
+          </div>
+        )}
         {habitLogs.length === 0 ? (
           <>
             <p> No habits logged yet!</p>
@@ -159,7 +223,12 @@ export default function Analytics() {
         ) : (
           <>
             <p>{predictActivity(habitLogs)}</p>
-            {/* Add logic here to quick add a habit once habit log page is completed */}
+           <button 
+              onClick={function() { quickLog(predictedHabitName); }} 
+              className="analytics-button"
+            >
+              Log it now
+            </button>
           </>
         )}
         </div>

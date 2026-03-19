@@ -34,7 +34,7 @@ export default function Home() {
         if (habitLogs) {
           const totalCO2 = habitLogs.reduce((total, current) => total + current.total_co2_saved, 0)
           setActivityCount(habitLogs.length)
-          setTotalCO2Saved(totalCO2)
+          setTotalCO2Saved(Number(totalCO2.toFixed(2))); // added this line to prevent js from breaking and showing a really small number
         }
       }
     }
