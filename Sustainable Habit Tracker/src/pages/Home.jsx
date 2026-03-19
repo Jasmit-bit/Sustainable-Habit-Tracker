@@ -1,14 +1,12 @@
 import { supabase } from '../supabaseClient'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { getPredictedActivities } from '../services/activityPrediction'
 // emojis used have come from emojipedia.org so full credits for those go to them
 export default function Home() {
   const [userName, setUserName] = useState('')
   const [tip, setTip] = useState('')
   const [totalCO2Saved, setTotalCO2Saved] = useState('0')
   const [activityCount, setActivityCount] = useState('0')
-  const [predictedHabits, setPredictedHabits] = useState([])
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -41,18 +39,6 @@ export default function Home() {
       }
     }
     fetchStats()
-
-    // Fetch smart activity predictions
-    const fetchPredictions = async () => {
-      const { data: { user } } = await supabase.auth.getUser()
-      if (user) {
-        const { data, error } = await getPredictedActivities(user.id)
-        if (!error) {
-          setPredictedHabits(data)
-        }
-      }
-    }
-    fetchPredictions()
   }, [])
 
   return (
@@ -76,39 +62,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* 3. Smart Activity Predictions */}
-      {predictedHabits.length > 0 && (
-        <>
-          <h2 style={{ fontSize: '1.2rem', color: '#333', marginBottom: '15px' }}>🤖 Smart Suggestions</h2>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '30px' }}>
-            {predictedHabits.map((habit) => (
-              <Link to="/log-habit" key={habit.id} style={{ textDecoration: 'none' }}>
-                <div style={{ 
-                  backgroundColor: '#F1F5F9', 
-                  border: '2px solid #E0E7FF', 
-                  color: '#333', 
-                  padding: '15px', 
-                  borderRadius: '12px', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'space-between',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  hover: { backgroundColor: '#E0E7FF' }
-                }}>
-                  <div style={{ flex: 1 }}>
-                    <span style={{ fontSize: '1rem', fontWeight: '600' }}>{habit.name}</span>
-                    <p style={{ margin: '5px 0 0', fontSize: '0.85rem', color: '#666' }}>Completed {habit.completions}x</p>
-                  </div>
-                  <span style={{ fontSize: '1.3rem' }}>✨</span>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </>
-      )}
-
-      {/* 4. Quick Action Buttons */}
+      {/* 3. Quick Action Buttons */}
       <h2 style={{ fontSize: '1.2rem', color: '#333', marginBottom: '15px' }}>Quick Actions</h2>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '30px' }}>
         <Link to="/log-habit" style={{ textDecoration: 'none' }}>
@@ -125,7 +79,7 @@ export default function Home() {
         </Link>
       </div>
 
-      {/* 5. Daily Eco-Tip Card */}
+      {/* 4. Daily Eco-Tip Card */}
       <div style={{ backgroundColor: '#E3F2FD', padding: '20px', borderRadius: '15px', borderLeft: '6px solid #2196F3', boxShadow: '0 2px 8px rgba(0,0,0,0.05)' }}>
         <h4 style={{ margin: '0 0 10px 0', color: '#1565C0', fontSize: '1.1rem' }}>💡 Daily Eco-Tip</h4>
         <p style={{ margin: 0, color: '#333', fontSize: '0.95rem', lineHeight: '1.5' }}>{tip}</p>
