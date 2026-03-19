@@ -12,6 +12,7 @@ import Family from './pages/Family'
 import Settings from './pages/Settings'
 import BottomNav from './components/BottomNav'
 import Accessibility from './pages/Accessibility'
+import HabitHistory from './components/HabitHistory'
 
 function App() {
   const [session, setSession] = useState(null)
@@ -36,6 +37,7 @@ function App() {
           <Route path="/family" element={session ? <Family /> : <Navigate to="/" />} />
           <Route path="/settings" element={session ? <Settings /> : <Navigate to="/" />} />
           <Route path="/settings/accessibility" element={session ? <Accessibility /> : <Navigate to="/" />} />
+          <Route path="/settings/habit-history" element={session ? <HabitHistory /> : <Navigate to="/" />} />
         </Routes>
       </div>
 
