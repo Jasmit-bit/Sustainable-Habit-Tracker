@@ -1,12 +1,17 @@
 import { supabase } from '../supabaseClient'
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { getCombinedSuggestions } from '../services/activityPrediction'
+import { logNormalHabit, logTransportHabit } from '../services/habitlog.js'
 // emojis used have come from emojipedia.org so full credits for those go to them
 export default function Home() {
   const [userName, setUserName] = useState('')
   const [tip, setTip] = useState('')
   const [totalCO2Saved, setTotalCO2Saved] = useState('0')
   const [activityCount, setActivityCount] = useState('0')
+  const [predictedHabits, setPredictedHabits] = useState([])
+  const [quickLogMessage, setQuickLogMessage] = useState('')
+  const [quickLogError, setQuickLogError] = useState(false)
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -39,7 +44,42 @@ export default function Home() {
       }
     }
     fetchStats()
+
+    // Fetch smart activity predictions
+    const fetchPredictions = async () => {
+      const { data: { user } } = await supabase.auth.getUser()
+      if (user) {
+        const { data, error } = await getCombinedSuggestions(user.id)
+        if (!error) {
+          setPredictedHabits(data)
+        }
+      }
+    }
+    fetchPredictions()
   }, [])
+
+  const handleQuickLog = async (habit) => {
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) return
+
+    let result
+    if (habit.category === 'transport') {
+      const distanceValue = window.prompt(`Enter distance for "${habit.name}" (km):`, '1.0')
+      if (!distanceValue || isNaN(distanceValue) || Number(distanceValue) <= 0) return
+      result = await logTransportHabit(user.id, habit.id, Number(distanceValue))
+    } else {
+      result = await logNormalHabit(user.id, habit.id)
+    }
+
+    if (result.error) {
+      setQuickLogMessage('Failed to log habit. Please try again.')
+      setQuickLogError(true)
+    } else {
+      setQuickLogMessage('Habit logged successfully! ✅')
+      setQuickLogError(false)
+    }
+    setTimeout(() => setQuickLogMessage(''), 3000)
+  }
 
   return (
     <div style={{ padding: '20px', fontFamily: 'sans-serif', maxWidth: '600px', margin: '0 auto' }}>
@@ -62,7 +102,46 @@ export default function Home() {
         </div>
       </div>
 
-      {/* 3. Quick Action Buttons */}
+      {/* 3. Quick Logs */}
+      {predictedHabits.length > 0 && (
+        <>
+          <h2 style={{ fontSize: '1.2rem', color: '#1b4332', marginBottom: '10px', fontFamily: 'Inter, sans-serif' }}>⚡ Quick Logs</h2>
+          {quickLogMessage && (
+            <p style={{ textAlign: 'center', fontWeight: '600', fontSize: '0.85rem', color: quickLogError ? '#DC2626' : '#2E8B57', marginBottom: '8px', fontFamily: 'Inter, sans-serif' }}>
+              {quickLogMessage}
+            </p>
+          )}
+          <div style={{ display: 'flex', flexDirection: 'row', gap: '8px', marginBottom: '25px' }}>
+            {predictedHabits.map((habit) => (
+              <div key={habit.id} style={{
+                flex: 1,
+                backgroundColor: '#E8F5E9',
+                border: '1px solid #95d5b2',
+                borderRadius: '10px',
+                padding: '8px 10px',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '5px',
+                fontFamily: 'Inter, sans-serif'
+              }}>
+                <span style={{ fontSize: '0.8rem', fontWeight: '600', color: '#1b4332', textAlign: 'center' }}>{habit.name}</span>
+                <span style={{ fontSize: '0.68rem', color: '#2d6a4f', textAlign: 'center' }}>
+                  {habit.source === 'timed' ? '🕐 Usually logged at this time' : '🔁 Frequently logged'}
+                </span>
+                <button
+                  onClick={() => handleQuickLog(habit)}
+                  style={{ border: 'none', borderRadius: '8px', background: 'linear-gradient(135deg, #2d6a4f, #40916c)', color: 'white', padding: '4px 14px', cursor: 'pointer', fontSize: '0.75rem', fontWeight: '600', width: 'auto', marginTop: '0' }}
+                >
+                  Log Now
+                </button>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+
+      {/* 4. Quick Action Buttons */}
       <h2 style={{ fontSize: '1.2rem', color: '#333', marginBottom: '15px' }}>Quick Actions</h2>
       <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '30px' }}>
         <Link to="/log-habit" style={{ textDecoration: 'none' }}>
