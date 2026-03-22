@@ -31,7 +31,7 @@ export default function Home() {
     const fetchUser = async () => {
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
-        setUserName(getUsername(user_metadata))
+        setUserName(getUsername(user.user_metadata))
       }
     }
     fetchUser()
@@ -48,7 +48,6 @@ export default function Home() {
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
         const { data: habitLogs } = await supabase.from('habit_logs').select('*').eq('user_id', user.id);
-        console.log(habitLogs)
         if (habitLogs) {
           const totalCO2 = calculateTotalCO2(habitLogs)
           setActivityCount(habitLogs.length)
