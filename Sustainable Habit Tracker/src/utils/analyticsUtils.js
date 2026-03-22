@@ -25,6 +25,8 @@ export function getTimePeriod(hour) {
 
 export function getMostFrequent(logs) {
 
+    if (logs.length == 0) return null;
+
     const freqs = logs.reduce((count, current) => {
         const habitName = current.habit.habit_name;
         count[habitName] = (count[habitName] || 0) + 1;
