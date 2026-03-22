@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react'
 import { supabase } from './supabaseClient'
 import logo from './logo_image.jpg'
 import './Auth.css'
+import { checkPasswordLength, checkPasswordLetter, checkPasswordNumber, validatePasswordCompleteness } from './utils/authUtils'; 
+
 
 export default function Auth() {
   const [email, setEmail] = useState('')
@@ -13,11 +15,11 @@ export default function Auth() {
   const [message, setMessage] = useState('')
   const [isError, setIsError] = useState(false)
 
-  // I want to make the passwords meet the criteria so I need these variables 
-  const isValidLength = password.length >= 8;
-  const hasLetter = /[a-zA-Z]/.test(password);
-  const hasNumber = /\d/.test(password);
-  const isPasswordValid = isValidLength && hasLetter && hasNumber;
+  // I want to make the passwords meet the criteria so I need these variables which I am also using for my tests
+  const isValidLength = checkPasswordLength(password);
+  const hasLetter = checkPasswordLetter(password);
+  const hasNumber = checkPasswordNumber(password);
+  const isPasswordValid = validatePasswordCompleteness(password);
 
   // to check if the username is valid or not
   const [usernameStatus, setUsernameStatus] = useState(null)

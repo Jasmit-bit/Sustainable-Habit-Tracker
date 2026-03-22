@@ -1,9 +1,28 @@
 # Sustainable Habit Tracker Testing Plan
 
-## Auth Page - Test Plan
+## Authentication Page - Test Plan
 
-| Test ID | Feature Being Tested | Component/Function | Steps to Execute | Expected Result | Actual Result | Pass/Fail |
+### Unit Testing
+
+Testing the password validation logic using custom edge-case strings to ensure security rules are strictly enforced.
+
+| Test ID | Feature Being Tested | Function | Steps to Execute | Expected Result | Actual Result | Pass/Fail |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| AUTH-UT-01 | Password Length Check | `checkPasswordLength()` | Test short string `"passw"` and valid string `"Password123"`. | Returns `false` for short string, `true` for valid string. | Vitest ran the function and confirmed length constraints were working. | Pass |
+| AUTH-UT-02 | Password Letter Check | `checkPasswordLetter()` | Test numbers only string `"327482"` and valid string `"Password123"`. | Returns `false` for numbers-only, `true` for valid string. | Vitest ran the function and confirmed the regex successfully rejected the string without letters. | Pass |
+| AUTH-UT-03 | Password Number Check | `checkPasswordNumber()` | Test letters only string `"Passwordabcde"` and valid string `"Password123"`. | Returns `false` for letters only, `true` for valid string. | Vitest ran the function and confirmed the regex successfully rejected the string without numbers. | Pass |
+| AUTH-UT-04 | Complete Password Check | `validatePasswordCompleteness()` | Test weak string `"didthiswork"` and strong string `"StrongPassword47"`. | Returns `false` for weak string, `true` for strong string. | Vitest confirmed the logic works correctly required all three rules. | Pass |
+
+### Integration Testing
+
+Testing UI mode toggles, live state updates, and database authentication interactions.
+
+| Test ID | Feature Being Tested | Component | Steps to Execute | Expected Result | Actual Result | Pass/Fail |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| AUTH-IT-01 | UI Mode Toggle | `Auth.jsx` | 1. Load component (defaults to Log In).<br>2. Click "Need an account? Sign Up". | Form updates to show "Sign Up" header, Username input, Name input, and Password checklist. | Vitest rendered the component, simulated the click event, and verified the Sign Up UI. | Pass |
+| AUTH-IT-02 | Live Username Check | `Auth.jsx` | *(Manual)* 1. Switch to Sign Up.<br>2. Type a known taken username `Jasmit`.<br>3. Wait. | UI displays "❌ Username is already taken". | UI successfully displayed the correct taken message. *(See attached screenshot)* | Pass |
+| AUTH-IT-03 | Empty Username Test | `Auth.jsx` | *(Manual)* 1. Switch to Sign Up.<br>2. Leave username blank.<br>3. Click Sign Up. | Stops database call and shows "Error: Username cannot be empty." | Validation caught the empty string and showed the red error message. *(See attached screenshot)* | Pass |
+| AUTH-IT-04 | Successful Login | `Auth.jsx` | *(Manual)* 1. Enter valid email and password.<br>2. Click Log In. | Supabase authenticates user and clears error messages. | Successfully authenticated with the Supabase backend and loaded to the Home dashboard. *(See attached screenshot)* | Pass |
 
 <br><br>
 
