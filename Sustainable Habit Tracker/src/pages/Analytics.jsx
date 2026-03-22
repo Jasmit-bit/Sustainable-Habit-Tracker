@@ -1,27 +1,19 @@
 import {useState, useEffect} from 'react';
 import {supabase} from '../supabaseClient';
 import './Analytics.css';
+import { calculateCO2Saved, calculatePlasticSaved, getMostFrequent, getTimePeriod } from '../utils/analyticsUtils';
 
 //smart activity prediction
 //updated function to suggest activity based on current time of day
 export function predictActivity(logs) {
 
-  if (logs.length === 0) return '';
+  if (logs.length == 0) return '';
 
   //records the current date/time as the app is being used
   const instant = new Date();
   const currentHour = instant.getHours();
-  let time = '';
 
-  if (currentHour >= 6 && currentHour < 12) {
-    time = 'morning';
-  }
-  else if (currentHour >= 12 && currentHour < 18) {
-    time = 'afternoon';
-  }
-  else {
-    time = 'night';
-  }
+  const time = getTimePeriod(currentHour);
 
   //filter for the database logs based on the current time that the app is being used
   const filteredByTime = logs.filter( log => {
@@ -47,21 +39,7 @@ export function predictActivity(logs) {
   }
 
   //frequency counting based on whatever set of logs we are using
-  const freqs = useLogs.reduce((count, current) => {
-    const habitName = current.habit.habit_name;
-    count[habitName] = (count[habitName] || 0) + 1;
-    return count;
-  }, {})
-
-  const nameArray = Object.keys(freqs);
-
-  let mostFrequent = nameArray[0];
-  for (let i = 1; i < nameArray.length; i++) {
-    if (freqs[nameArray[i]] > freqs[mostFrequent]) {
-      mostFrequent = nameArray[i];
-    }
-  }
-  return mostFrequent;
+  return getMostFrequent(useLogs);
 
 }
 
@@ -97,27 +75,6 @@ export default function Analytics() {
       setLoading(false);
     }
   }
-
-  //pass the logs into the function to calculate the running total of all co2 saved in order to display "lifetime" stats
-  function calculateCO2Saved(logs) {
-    try {
-      const total = logs.reduce((sum, current) => sum + current.total_co2_saved, 0);
-      return Number(total.toFixed(2)); // like on the lob habit page this added a small number so I fixed that
-    } catch (error) {
-      return 0;
-    } 
-  }
-
-  //do the same for total plastic saved
-  function calculatePlasticSaved(logs) {
-    try {
-      const total = logs.reduce((sum, current) => sum + current.total_plastic_saved, 0);
-      return Number(total.toFixed(2)); // like on the lob habit page this added a small number so I fixed that
-    } catch (error) {
-      return 0;
-    }
-  }
-
 
   return (
     <div className="analytics-container">
