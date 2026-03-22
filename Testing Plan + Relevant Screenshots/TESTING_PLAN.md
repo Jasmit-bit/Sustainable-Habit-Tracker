@@ -25,6 +25,18 @@ Testing the pure prediction logic functions used by the Home page Quick Logs fea
 | PRED-UT-05 | Monthly count accuracy | `getTopHabits()` | Pass 2 logs this month and 1 log last month for "Walking". | `monthCount` for Walking is `2`. | Vitest confirmed only current-month logs were counted in `monthCount`. | Pass |
 | PRED-UT-06 | Empty logs edge case | `getTopHabits()` | Pass an empty array. | Returns `[]`. | Vitest confirmed `getTopHabits([])` returned an empty array. | Pass |
 
+### Unit Testing (Home page logic)
+
+Testing the pure logic functions extracted from the Home page component, using mock data.
+
+| Test ID | Feature Being Tested | Component/Function | Steps to Execute | Expected Result | Actual Result | Pass/Fail |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| HOME-UT-01 | CO2 total calculation | `calculateTotalCO2()` | Pass an array of fake habit logs with known CO2 values (2.5 and 4.0). | Returns `6.5` as the total. | Vitest confirmed `calculateTotalCO2()` correctly summed the values and returned `6.5`. | Pass |
+| HOME-UT-02 | Random tip selection | `getRandomTipContent()` | Pass an array of 3 fake tips. | Returns a tip that exists in the array and is not undefined. | Vitest confirmed the result was defined and contained within the array of tip contents. | Pass |
+| HOME-UT-03 | Username — name present | `getUsername()` | Pass metadata with both name and username set. | Returns the name field. | Vitest confirmed `getUsername()` returned `'John'` when name was present. | Pass |
+| HOME-UT-04 | Username — name absent | `getUsername()` | Pass metadata with only username set. | Returns the username field. | Vitest confirmed `getUsername()` returned `'john123'` when name was absent. | Pass |
+| HOME-UT-05 | Username — fallback | `getUsername()` | Pass empty metadata object. | Returns `'Eco Warrior'`. | Vitest confirmed `getUsername()` returned `'Eco Warrior'` when neither name nor username were present. | Pass |
+
 ### Integration Testing
 
 Testing UI behaviour and component rendering of the Home page using mocked Supabase and prediction services.

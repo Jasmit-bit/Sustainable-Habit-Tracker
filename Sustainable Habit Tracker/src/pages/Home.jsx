@@ -4,6 +4,20 @@ import { Link } from 'react-router-dom'
 import { getCombinedSuggestions } from '../services/activityPrediction'
 import { logNormalHabit, logTransportHabit } from '../services/habitlog.js'
 // emojis used have come from emojipedia.org so full credits for those go to them
+
+export function calculateTotalCO2(habitLogs) {
+  return habitLogs.reduce((total, current) => total + current.total_co2_saved, 0)
+}
+
+export function getRandomTipContent(tips) {
+  const randomIndex = Math.floor(Math.random() * tips.length)
+  return tips[randomIndex].content
+}
+
+export function getUsername(user_metadata) {
+  return user_metadata.name || user_metadata.username || 'Eco Warrior'
+}
+
 export default function Home() {
   const [userName, setUserName] = useState('')
   const [tip, setTip] = useState('')
@@ -17,7 +31,7 @@ export default function Home() {
     const fetchUser = async () => {
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
-        setUserName(user.user_metadata.name || user.user_metadata.username || 'Eco Warrior')
+        setUserName(getUsername(user.user_metadata))
       }
     }
     fetchUser()
@@ -25,8 +39,7 @@ export default function Home() {
     const fetchTips = async () => {
       const { data: tips } = await supabase.from('tips').select('*')
       if (tips) {
-        const randomIndex = Math.floor(Math.random() * tips.length)
-        setTip(tips[randomIndex].content)
+        setTip(getRandomTipContent(tips))
       }
     }
     fetchTips()
@@ -35,9 +48,8 @@ export default function Home() {
       const { data: { user } } = await supabase.auth.getUser()
       if (user) {
         const { data: habitLogs } = await supabase.from('habit_logs').select('*').eq('user_id', user.id);
-        console.log(habitLogs)
         if (habitLogs) {
-          const totalCO2 = habitLogs.reduce((total, current) => total + current.total_co2_saved, 0)
+          const totalCO2 = calculateTotalCO2(habitLogs)
           setActivityCount(habitLogs.length)
           setTotalCO2Saved(Number(totalCO2.toFixed(2))); // added this line to prevent js from breaking and showing a really small number
         }
