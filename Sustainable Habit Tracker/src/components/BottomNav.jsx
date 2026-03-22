@@ -1,19 +1,7 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { supabase } from '../supabaseClient' 
 
 export default function BottomNav() {
   const location = useLocation()
-  const navigate = useNavigate() 
-
-  const handleLogout = async () => {
-    const { error } = await supabase.auth.signOut()
-    if (error) {
-      alert(error.message)
-    } else {
-      navigate('/') 
-    }
-  }
-
   const navContainerStyle = {
     position: 'fixed',
     bottom: 0,
