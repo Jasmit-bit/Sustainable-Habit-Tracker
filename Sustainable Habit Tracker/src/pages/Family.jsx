@@ -1,6 +1,7 @@
 import { useState, useEffect, use} from 'react';
 import {supabase} from '../supabaseClient';
 import './Family.css';
+import { validateGoal, generateShareText } from '../utils/familyUtils';
 
 export default function Family() {
 
@@ -79,8 +80,8 @@ export default function Family() {
     userPosition++;// need to account for the lists starting at 0
     const saved = userStats.co2_saved;
 
-    const textToShare = `I have saved ${saved} kg of CO2 this month and I'm currently rank #${userPosition} in my household on the Sustainable Habit Tracker App! Can you beat me? Message me to get my family code, lets Compete!!!`
-
+    const textToShare = generateShareText(saved, userPosition);
+    
     // most new browsers have the sharing feature built in so in theory this should bring the pop up screen with the socials
     if(navigator.share)
     {
@@ -121,18 +122,13 @@ export default function Family() {
     e.preventDefault();
 
     const goalNumber = Number(draftGoal);
-      if(goalNumber<=0) // in theory you should never be able to hit this if statement because I added the html constraint but just in case
-      {
-        setError(true);
-        setMessage("Please enter a positive goal");
-        return;
-      }
-      else if(goalNumber>=1000000)
-      {
-        setError(true);
-        setMessage("Please set a realistic goal");
-        return;
-      }
+
+    const validationMessage = validateGoal(goalNumber);
+    if (validationMessage !== "Valid") {
+      setError(true);
+      setMessage(validationMessage);
+      return;
+    }
 
    try {
       setLoading(true);

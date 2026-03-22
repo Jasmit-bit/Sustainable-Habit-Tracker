@@ -128,7 +128,7 @@ export default function Analytics() {
       {/* page header */}
       <div className="analytics-header">
         <h2> Your Analytics 📊 </h2>
-        <p> Summary of your lifetime stats so far! </p>
+        <p> Summary of your lifetime stats so far! This page works on your Quick Habit Logs, behind the scenes!</p>
       </div>
 
       {/* stats cards */}
