@@ -2,11 +2,23 @@
 
 ## Auth Page - Test Plan
 
+| Test ID | Feature Being Tested | Component/Function | Steps to Execute | Expected Result | Actual Result | Pass/Fail |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+
 ## Home Page - Test Plan
+
+| Test ID | Feature Being Tested | Component/Function | Steps to Execute | Expected Result | Actual Result | Pass/Fail |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 
 ## Log Habit Page - Test Plan
 
+| Test ID | Feature Being Tested | Component/Function | Steps to Execute | Expected Result | Actual Result | Pass/Fail |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+
 ## Analytics Page - Test Plan
+
+| Test ID | Feature Being Tested | Component/Function | Steps to Execute | Expected Result | Actual Result | Pass/Fail |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 
 ## Family Page - Test Plan
 
@@ -35,3 +47,6 @@ Testing UI Interaction and component changes on the Family Page
 | FAM-IT-07 | Leave Household Manual | `Family.jsx` | *(Manual)* 1. Click "Leave Household".<br>2. Click "OK" on prompt. | Returns to "You don't have a household yet!" screen. | Sucessfully left the household and returned to the "You don't have a household screen" (Picture Attached) |Pass |
 
 ## Settings Page - Test Plan
+
+| Test ID | Feature Being Tested | Component/Function | Steps to Execute | Expected Result | Actual Result | Pass/Fail |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
