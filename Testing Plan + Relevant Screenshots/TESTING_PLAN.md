@@ -5,22 +5,32 @@
 | Test ID | Feature Being Tested | Component/Function | Steps to Execute | Expected Result | Actual Result | Pass/Fail |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 
+<br><br>
+
 ## Home Page - Test Plan
 
 | Test ID | Feature Being Tested | Component/Function | Steps to Execute | Expected Result | Actual Result | Pass/Fail |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+
+<br><br>
 
 ## Log Habit Page - Test Plan
 
 | Test ID | Feature Being Tested | Component/Function | Steps to Execute | Expected Result | Actual Result | Pass/Fail |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 
+<br><br>
+
 ## Analytics Page - Test Plan
 
 | Test ID | Feature Being Tested | Component/Function | Steps to Execute | Expected Result | Actual Result | Pass/Fail |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 
+<br><br>
+
 ## Family Page - Test Plan
+
+#### Unit/Integration testing is stored in `Sustainable Habit Tracker\src\pages\Family.test.jsx`
 
 ### Unit Testing
 
@@ -45,6 +55,8 @@ Testing UI Interaction and component changes on the Family Page
 | FAM-IT-05 | Join Valid Family Manual | `Family.jsx` | *(Manual)* 1. Log in.<br>2. Go to Family.<br>3. Click "Join a Household", enter `VZX2G9` as the Invite code, click Join. | Circuit Seekers V2 Family dashboard shows up |Sucessfully joined the household by following the UI (Picture Attached) |Pass |
 | FAM-IT-06 | Dashboard Goal Update Manual Test | `Family.jsx` | *(Manual)* 1. Log in.<br>2. Go to Family *(Which you are an admin of)*.<br>3. Click "Edit Goal", enter 100, click Save. | Goal updates to 100 on the dashboard. | Goal Successfuly updated to 100 by following the UI (Picture Attached) |Pass |
 | FAM-IT-07 | Leave Household Manual | `Family.jsx` | *(Manual)* 1. Click "Leave Household".<br>2. Click "OK" on prompt. | Returns to "You don't have a household yet!" screen. | Sucessfully left the household and returned to the "You don't have a household screen" (Picture Attached) |Pass |
+
+<br><br>
 
 ## Settings Page - Test Plan
 
