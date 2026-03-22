@@ -10,6 +10,7 @@
 ## Home Page - Test Plan
 
 #### Unit testing is stored in `Sustainable Habit Tracker/src/utils/predictionUtils.test.js`
+#### Integration testing is stored in `Sustainable Habit Tracker/src/pages/Home.test.jsx`
 
 ### Unit Testing
 
@@ -24,6 +25,20 @@ Testing the pure prediction logic functions used by the Home page Quick Logs fea
 | PRED-UT-05 | Monthly count accuracy | `getTopHabits()` | Pass 2 logs this month and 1 log last month for "Walking". | `monthCount` for Walking is `2`. | Vitest confirmed only current-month logs were counted in `monthCount`. | Pass |
 | PRED-UT-06 | Empty logs edge case | `getTopHabits()` | Pass an empty array. | Returns `[]`. | Vitest confirmed `getTopHabits([])` returned an empty array. | Pass |
 
+### Integration Testing
+
+Testing UI behaviour and component rendering of the Home page using mocked Supabase and prediction services.
+
+| Test ID | Feature Being Tested | Component | Steps to Execute | Expected Result | Actual Result | Pass/Fail |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| HOME-IT-01 | Greeting renders with username | `Home.jsx` | Render Home with a mocked user named "Salami". | "Hello, Salami! 🌍" appears on screen. | Vitest rendered the component and confirmed the greeting text was present. | Pass |
+| HOME-IT-02 | Stats widgets present | `Home.jsx` | Render Home. | "kg CO₂ Saved" and "Activities Logged" widgets are visible. | Vitest confirmed both stat labels were rendered on screen. | Pass |
+| HOME-IT-03 | Quick Logs hidden with no predictions | `Home.jsx` | Render Home with `getCombinedSuggestions` returning empty array. | "⚡ Quick Logs" section does not appear. | Vitest confirmed the section was absent when no predictions returned. | Pass |
+| HOME-IT-04 | Quick Logs shown with predictions | `Home.jsx` | Mock `getCombinedSuggestions` to return one habit. | "⚡ Quick Logs" section and habit name appear. | Vitest confirmed the section and habit name rendered correctly. | Pass |
+| HOME-IT-05 | "Usually logged at this time" label for timed prediction | `Home.jsx` | Mock a prediction with `source: 'timed'`. | Label "Usually logged at this time" appears under habit name. | Vitest confirmed the correct label rendered for a timed suggestion. | Pass |
+| HOME-IT-06 | "Frequently logged" label for frequency prediction | `Home.jsx` | Mock a prediction with `source: 'frequent'`. | Label "Frequently logged" appears under habit name. | Vitest confirmed the correct label rendered for a frequency-based suggestion. | Pass |
+| HOME-IT-07 | Quick Actions buttons present | `Home.jsx` | Render Home. | "Log a New Habit" and "View My Progress" buttons are visible. | Vitest confirmed both action buttons were rendered. | Pass |
+| HOME-IT-08 | Daily Eco-Tip section present | `Home.jsx` | Render Home. | "Daily Eco-Tip" section is visible. | Vitest confirmed the eco-tip section was rendered on screen. | Pass |
 
 <br><br>
 
