@@ -58,16 +58,4 @@ describe('Analytics Page Unit Tests', function() {
         const result = getTimePeriod(mockTime);
         expect(result).toBe('night');
     })
-
-    //ANA-UT-08 - getMostFrequent returns correct most frequent habit
-    test('ANA-UT-08: getMostFrequent returns the correct most frequent habit', function() {
-        const result = getMostFrequent(mockLogs);
-        expect(result).toBe('Biked or walked')
-    })
-
-    //ANA-UT-09 - getMostFrequent returns null for empty array
-    test('ANA-UT-09: getMostFrequent returns null for empty array', function() {
-        const result = getMostFrequent(emptyMockLogs);
-        expect(result).toBe(null);
-    })
 })

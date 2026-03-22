@@ -9,8 +9,21 @@
 
 ## Home Page - Test Plan
 
+#### Unit testing is stored in `Sustainable Habit Tracker/src/utils/predictionUtils.test.js`
+
+### Unit Testing
+
+Testing the pure prediction logic functions used by the Home page Quick Logs feature, using mock log data.
+
 | Test ID | Feature Being Tested | Component/Function | Steps to Execute | Expected Result | Actual Result | Pass/Fail |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| PRED-UT-01 | Time-of-day prediction (correct window) | `predictActivity()` | Pass logs all in the current time window with "Walking" appearing twice and "Cycling" once. | Returns `"Walking"` as the most frequent habit for this time. | Vitest ran `predictActivity()` with mock afternoon logs and confirmed it returned `"Walking"`. | Pass |
+| PRED-UT-02 | Time-of-day prediction (fallback to all logs) | `predictActivity()` | Pass logs all outside the current time window. | Falls back to all logs and returns the most frequent overall. | Vitest confirmed the fallback returned `"Cycling"` (most frequent in all logs) when no logs matched the current time bucket. | Pass |
+| PRED-UT-03 | Empty logs edge case | `predictActivity()` | Pass an empty array. | Returns empty string `""`. | Vitest confirmed `predictActivity([])` returned `""`. | Pass |
+| PRED-UT-04 | Top 3 habits by frequency | `getTopHabits()` | Pass logs with Walking×3, Cycling×2, Shopping×1. | Returns array of 3 habits sorted by frequency: Walking, Cycling, Shopping. | Vitest confirmed the returned array was correctly ordered by total log count. | Pass |
+| PRED-UT-05 | Monthly count accuracy | `getTopHabits()` | Pass 2 logs this month and 1 log last month for "Walking". | `monthCount` for Walking is `2`. | Vitest confirmed only current-month logs were counted in `monthCount`. | Pass |
+| PRED-UT-06 | Empty logs edge case | `getTopHabits()` | Pass an empty array. | Returns `[]`. | Vitest confirmed `getTopHabits([])` returned an empty array. | Pass |
+
 
 <br><br>
 
