@@ -9,8 +9,35 @@
 
 ## Home Page - Test Plan
 
+#### Unit/Integration testing is stored in `Sustainable Habit Tracker/src/pages/Home.test.jsx` and `Sustainable Habit Tracker/src/utils/predictionUtils.test.js`
+
+### Unit Testing
+
+Testing the pure prediction logic functions used by the Home page Quick Logs feature, using mock log data.
+
 | Test ID | Feature Being Tested | Component/Function | Steps to Execute | Expected Result | Actual Result | Pass/Fail |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| PRED-UT-01 | Time-of-day prediction (correct window) | `predictActivity()` | Pass logs all in the current time window with "Walking" appearing twice and "Cycling" once. | Returns `"Walking"` as the most frequent habit for this time. | Vitest ran `predictActivity()` with mock afternoon logs and confirmed it returned `"Walking"`. | Pass |
+| PRED-UT-02 | Time-of-day prediction (fallback to all logs) | `predictActivity()` | Pass logs all outside the current time window. | Falls back to all logs and returns the most frequent overall. | Vitest confirmed the fallback returned `"Cycling"` (most frequent in all logs) when no logs matched the current time bucket. | Pass |
+| PRED-UT-03 | Empty logs edge case | `predictActivity()` | Pass an empty array. | Returns empty string `""`. | Vitest confirmed `predictActivity([])` returned `""`. | Pass |
+| PRED-UT-04 | Top 3 habits by frequency | `getTopHabits()` | Pass logs with Walking×3, Cycling×2, Shopping×1. | Returns array of 3 habits sorted by frequency: Walking, Cycling, Shopping. | Vitest confirmed the returned array was correctly ordered by total log count. | Pass |
+| PRED-UT-05 | Monthly count accuracy | `getTopHabits()` | Pass 2 logs this month and 1 log last month for "Walking". | `monthCount` for Walking is `2`. | Vitest confirmed only current-month logs were counted in `monthCount`. | Pass |
+| PRED-UT-06 | Empty logs edge case | `getTopHabits()` | Pass an empty array. | Returns `[]`. | Vitest confirmed `getTopHabits([])` returned an empty array. | Pass |
+
+### Integration Testing
+
+Testing UI behaviour and component rendering of the Home page using mocked Supabase and prediction services.
+
+| Test ID | Feature Being Tested | Component | Steps to Execute | Expected Result | Actual Result | Pass/Fail |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| HOME-IT-01 | Greeting renders with username | `Home.jsx` | Render Home with a mocked user named "Salami". | "Hello, Salami! 🌍" appears on screen. | Vitest rendered the component and confirmed the greeting text was present. | Pass |
+| HOME-IT-02 | Stats widgets present | `Home.jsx` | Render Home. | "kg CO₂ Saved" and "Activities Logged" widgets are visible. | Vitest confirmed both stat labels were rendered on screen. | Pass |
+| HOME-IT-03 | Quick Logs hidden with no predictions | `Home.jsx` | Render Home with `getCombinedSuggestions` returning empty array. | "⚡ Quick Logs" section does not appear. | Vitest confirmed the section was absent when no predictions returned. | Pass |
+| HOME-IT-04 | Quick Logs shown with predictions | `Home.jsx` | Mock `getCombinedSuggestions` to return one habit. | "⚡ Quick Logs" section and habit name appear. | Vitest confirmed the section and habit name rendered correctly. | Pass |
+| HOME-IT-05 | "Usually logged at this time" label for timed prediction | `Home.jsx` | Mock a prediction with `source: 'timed'`. | Label "Usually logged at this time" appears under habit name. | Vitest confirmed the correct label rendered for a timed suggestion. | Pass |
+| HOME-IT-06 | "Frequently logged" label for frequency prediction | `Home.jsx` | Mock a prediction with `source: 'frequent'`. | Label "Frequently logged" appears under habit name. | Vitest confirmed the correct label rendered for a frequency-based suggestion. | Pass |
+| HOME-IT-07 | Quick Actions buttons present | `Home.jsx` | Render Home. | "Log a New Habit" and "View My Progress" buttons are visible. | Vitest confirmed both action buttons were rendered. | Pass |
+| HOME-IT-08 | Daily Eco-Tip section present | `Home.jsx` | Render Home. | "Daily Eco-Tip" section is visible. | Vitest confirmed the eco-tip section was rendered on screen. | Pass |
 
 <br><br>
 
