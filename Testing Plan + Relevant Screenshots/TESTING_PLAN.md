@@ -16,8 +16,33 @@
 
 ## Log Habit Page - Test Plan
 
+#### Unit/Integration testing is stored in `Sustainable Habit Tracker\src\services` and ...
+
+### Unit Testing 
+
+Testing logic and the limits I set on the habitlog page using mock data
+
 | Test ID | Feature Being Tested | Component/Function | Steps to Execute | Expected Result | Actual Result | Pass/Fail |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| LOG-UT-01 | Getting habit data (Existing) | 'getHabit()' | Attempt to retrieve habit with id of 5 | Habit field should be retrieved | Vitest returns correct habit | Pass |
+| LOG-UT-02 | Getting habit data (Non existant) | 'getHabit()' | Attempt to retrieve habit with id of 999 | Error should be returned | Vitest returns an error | Pass |
+| LOG-UT-03 | Getting habits with a specific category| 'getHabitsByCategory()' | Attempt to retrieve habits with category of 'food' | All habits with category of 'food' should be returned | Vitest returns all expected habits | Pass |
+| LOG-UT-04 | Getting habits with category of 'nonexistent' | 'getHabitsByCategory()' | Attempt to retrieve habits with a nulnonexistent category | empty array | Vitest returns an empty array | Pass |
+| LOG-UT-05 | Calculating Co2 saved from transport | 'calculateTransportCo2Saved' | Attempt to calculate co2 saved from cycling 5km | 1.0 | 1.0 | Pass |
+| LOG-UT-06 | Calculating Co2 saved (with supabase error) | 'calculateTransportCo2Saved' | Attempt to calculate co2 saved from cycling 5km | Should return null | null | Pass |
+| LOG-UT-07 | Calculating Co2 saved with a distance of 0 | 'calculateTransportCo2Saved' | Attempt to calculate co2 saved from cycling 0km | 0 | 0 | Pass |
+| LOG-UT-08 | Logging a food/shopping habit (Successful) | 'logNormalHabit()' | Attempt to log a mock habit | null | null | Pass |
+| LOG-UT-09 | Logging a food/shopping habit with a profile that has no existing Co2 saved | 'logNormalHabit()' | Attempt to log a mock habit with a non existent habit | null | null | Pass |
+| LOG-UT-10 | Logging a non existent food/shopping habit | 'logNormalHabit()' | Attempt to log a non existent habit with an existing profile  | 'Habit not found' | 'TypeError: Cannot read properties of null (reading '0')' | Fail |
+| LOG-UT-11 | Logging a food/shopping habit but inserting into the database fails | 'logNormalHabit()' | Attempt to log existing habit but simulate a database error | error | error | Pass |
+| LOG-UT-12 | Logging habit where profile update fails | 'logNormalHabit()' | Attempt to log habit but profile update fails | '{ error: 'Update failed' }' | Update failed | Pass |
+| LOG-UT-13 | Logging transport habit (Successful) | 'logTransportHabit()' | Attempt to log transport habit with distance 10km | null | null | Pass |
+| LOG-UT-14 | Logging transport habit with decimal CO2 values | 'logTransportHabit()' | Attempt to log transport habit with CO2 rate 0.33 over 3km | null | null | Pass |
+| LOG-UT-15 | Logging non-existent transport habit | 'logTransportHabit()' | Attempt to log transport habit with ID that doesn't exist | Habit not found | 'TypeError: Cannot read properties of null (reading '0')' | Fail |
+| LOG-UT-16 | Logging transport habit where habit_logs insert fails | 'logTransportHabit()' | Attempt to log transport habit but database insert fails | Insert failed | Insert failed | Pass |
+| LOG-UT-17 | Logging transport habit where profile update fails | 'logTransportHabit()' | Attempt to log transport habit but profile update fails | Update failed | Update failed | Pass |
+
+
 
 <br><br>
 
@@ -25,6 +50,7 @@
 
 | Test ID | Feature Being Tested | Component/Function | Steps to Execute | Expected Result | Actual Result | Pass/Fail |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+
 
 <br><br>
 
