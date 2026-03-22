@@ -16,10 +16,12 @@ describe('Family Component UI Integration Tests', function() {
   test('FAM-IT-01: "Create Household" UI appears when clicked', async function() {
     render(<Family />);
     
-    // Wait for the main screen to load
+    // I had a problem for the test going to early so if I wait for the screen to load that should fix it
     await waitFor(function() {
       expect(screen.getByText("You don't have a household yet!")).toBeDefined();
     });
+
+    // create button test, if I click it should prompt me to choose a household name
     const createButton = screen.getByText('Create a Household');
     fireEvent.click(createButton);
 
@@ -29,7 +31,6 @@ describe('Family Component UI Integration Tests', function() {
 
   test('FAM-IT-02: "Join Household" UI appears when clicked', async function() {
     render(<Family />);
-
     await waitFor(function() {
       expect(screen.getByText("You don't have a household yet!")).toBeDefined();
     });
@@ -55,7 +56,6 @@ describe('Family Component UI Integration Tests', function() {
 
   test('FAM-IT-04: Join Code Input State updates correctly', async function() {
     render(<Family />);
-
     await waitFor(function() {
       expect(screen.getByText("You don't have a household yet!")).toBeDefined();
     });
