@@ -37,7 +37,7 @@ describe('Habit Services Unit Tests', () => {
   });
 
   describe('getHabit', () => {
-    test('GET-HABIT-01: should return habit data when habit exists', async () => {
+    test('LOG-UT-01: should return habit data when habit exists', async () => {
       const mockHabit = { id: 1, habit_name: 'Water bottle', co2Saved: 0.08, plasticSaved: 13.5 };
       
       const mockQuery = createMockQuery();
@@ -52,7 +52,7 @@ describe('Habit Services Unit Tests', () => {
       expect(result.error).toBeNull();
     });
 
-    test('GET-HABIT-02: should return error when habit not found', async () => {
+    test('LOG-UT-02: should return error when habit not found', async () => {
       const mockError = { message: 'Habit not found' };
       
       const mockQuery = createMockQuery();
@@ -68,7 +68,7 @@ describe('Habit Services Unit Tests', () => {
   });
 
   describe('getHabitsByCategory', () => {
-    test('GET-CAT-01: should return habits for given category', async () => {
+    test('LOG-UT-03: should return habits for given category', async () => {
       const mockHabits = [
         { id: 1, habit_name: 'Water bottle', category: 'food' },
         { id: 2, habit_name: 'Crisps wrapper', category: 'food' }
@@ -85,7 +85,7 @@ describe('Habit Services Unit Tests', () => {
       expect(result.data).toEqual(mockHabits);
     });
 
-    test('GET-CAT-02: should return empty array when no habits in category', async () => {
+    test('LOG-UT-04: should return empty array when no habits in category', async () => {
       const mockQuery = createMockQuery();
       mockQuery.eq.mockResolvedValue({ data: [], error: null });
       
@@ -98,7 +98,7 @@ describe('Habit Services Unit Tests', () => {
   });
 
   describe('calculateTransportCo2Saved', () => {
-    test('CALC-TRAN-01: should correctly calculate total CO2 saved', async () => {
+    test('LOG-UT-05: should correctly calculate total CO2 saved', async () => {
       const mockData = [{ co2Saved: 0.20 }];
       
       const mockQuery = createMockQuery();
@@ -116,7 +116,7 @@ describe('Habit Services Unit Tests', () => {
       expect(result).toBe(1.0);
     });
 
-    test('CALC-TRAN-02: should return null when error occurs', async () => {
+    test('LOG-UT-06: should return null when error occurs', async () => {
       const mockError = { message: 'Database error' };
       
       const mockQuery = createMockQuery();
@@ -134,7 +134,7 @@ describe('Habit Services Unit Tests', () => {
       expect(result).toBeNull();
     });
 
-    test('CALC-TRAN-03: should handle zero distance correctly', async () => {
+    test('LOG-UT-07: should handle zero distance correctly', async () => {
       const mockData = [{ co2Saved: 0.20 }];
       
       const mockQuery = createMockQuery();
@@ -159,7 +159,7 @@ describe('Habit Services Unit Tests', () => {
     const mockHabit = [{ id: 1, co2Saved: 0.08, plasticSaved: 13.5 }];
     const mockProfile = { co2_saved: 2.5 };
 
-    test('LOG-NORM-01: should successfully log habit and update profile', async () => {
+    test('LOG-UT-08: should successfully log habit and update profile', async () => {
       const habitQuery = createMockQuery();
       habitQuery.eq.mockResolvedValue({ data: mockHabit, error: null });
       
@@ -186,7 +186,7 @@ describe('Habit Services Unit Tests', () => {
       expect(result).toEqual({ error: null });
     });
 
-    test('LOG-NORM-02: should handle missing profile co2_saved (null/undefined)', async () => {
+    test('LOG-UT-09: should handle missing profile co2_saved (null/undefined)', async () => {
       const mockProfileNull = { co2_saved: null };
       
       const habitQuery = createMockQuery();
@@ -215,7 +215,7 @@ describe('Habit Services Unit Tests', () => {
       expect(result).toEqual({ error: null });
     });
 
-    test('LOG-NORM-03: should return error if getHabit fails', async () => {
+    test('LOG-UT-10: should return error if getHabit fails', async () => {
       const mockError = { message: 'Habit not found' };
       
       const habitQuery = createMockQuery();
@@ -228,7 +228,7 @@ describe('Habit Services Unit Tests', () => {
       expect(result).toEqual({ error: mockError });
     });
 
-    test('LOG-NORM-04: should return error if habit_logs insert fails', async () => {
+    test('LOG-UT-11: should return error if habit_logs insert fails', async () => {
       const mockError = { message: 'Insert failed' };
       
       const habitQuery = createMockQuery();
@@ -246,7 +246,7 @@ describe('Habit Services Unit Tests', () => {
       expect(result).toEqual({ error: mockError });
     });
 
-    test('LOG-NORM-05: should return error if profile update fails', async () => {
+    test('LOG-UT-12: should return error if profile update fails', async () => {
       const mockError = { message: 'Update failed' };
       
       const habitQuery = createMockQuery();
@@ -283,7 +283,7 @@ describe('Habit Services Unit Tests', () => {
     const mockHabit = [{ id: 5, co2Saved: 0.20, plasticSaved: 0 }];
     const mockProfile = { co2_saved: 5.0 };
 
-    test('LOG-TRAN-01: should correctly calculate CO2 with distance and update profile', async () => {
+    test('LOG-UT-13: should correctly calculate CO2 with distance and update profile', async () => {
       const habitQuery = createMockQuery();
       habitQuery.eq.mockResolvedValue({ data: mockHabit, error: null });
       
@@ -310,7 +310,7 @@ describe('Habit Services Unit Tests', () => {
       expect(result).toEqual({ error: null });
     });
 
-    test('LOG-TRAN-02: should handle decimal CO2 values correctly', async () => {
+    test('LOG-UT-14: should handle decimal CO2 values correctly', async () => {
       const mockHabitDecimal = [{ id: 5, co2Saved: 0.33, plasticSaved: 0 }];
       
       const habitQuery = createMockQuery();
@@ -339,7 +339,7 @@ describe('Habit Services Unit Tests', () => {
       expect(result).toEqual({ error: null });
     });
 
-    test('LOG-TRAN-03: should return error if getHabit fails', async () => {
+    test('LOG-UT-15: should return error if getHabit fails', async () => {
       const mockError = { message: 'Habit not found' };
       
       const habitQuery = createMockQuery();
@@ -352,7 +352,7 @@ describe('Habit Services Unit Tests', () => {
       expect(result).toEqual({ error: mockError });
     });
 
-    test('LOG-TRAN-04: should return error if habit_logs insert fails', async () => {
+    test('LOG-UT-16: should return error if habit_logs insert fails', async () => {
       const mockError = { message: 'Insert failed' };
       
       const habitQuery = createMockQuery();
@@ -370,7 +370,7 @@ describe('Habit Services Unit Tests', () => {
       expect(result).toEqual({ error: mockError });
     });
 
-    test('LOG-TRAN-05: should return error if profile update fails', async () => {
+    test('LOG-UT-17: should return error if profile update fails', async () => {
       const mockError = { message: 'Update failed' };
       
       const habitQuery = createMockQuery();
