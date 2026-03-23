@@ -162,6 +162,8 @@ Testing UI Interaction and component changes on the Family Page
 
 ### Unit Testing
 
+Testing user profile metadata updates, input validation, and accessibility state logic.
+
 | Test ID | Feature Being Tested | Component/Function | Steps to Execute | Expected Result | Actual Result | Pass/Fail |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
 | SET-UT-01 | Update Name Metadata | `updateName()` | Call `updateName()` with "John Smith". | `supabase.auth.updateUser()` is called with { name: "John Smith" } and profiles table updates with correct user id. | :--- | :--- |
@@ -172,6 +174,8 @@ Testing UI Interaction and component changes on the Family Page
 | SET-UT-06 | Brightness Slider | `handleBrightness()` | Move slider from 100 to 50. | 	Brightness overlay opacity updates correctly (darker screen). | :--- | :--- |
 
 ### Integration Testing
+
+Testing UI interaction flow, data persistence, and global accessibility styles across the application.
 
 | Test ID | Feature Being Tested | Component | Steps to Execute | Expected Result | Actual Result | Pass/Fail |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
