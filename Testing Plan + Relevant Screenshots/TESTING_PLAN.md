@@ -43,6 +43,17 @@ Testing logic and the limits I set on the habitlog page using mock data
 | LOG-UT-17 | Logging transport habit where profile update fails | 'logTransportHabit()' | Attempt to log transport habit but profile update fails | Update failed | Update failed | Pass |
 
 
+### Integration Testing
+
+Testing UI Interaction and component changes on the habitlog Page
+
+| Test ID | Feature Being Tested | Component | Steps to Execute | Expected Result | Actual Result | Pass/Fail |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| LOG-IT-01 | Saving a 'Food Waste Recycling' habit | 'Food Waste Recycling' interface | Select a dropdown habit and click on save | 'habit logged successfully' | 'habit logged successfully' | Pass |
+| LOG-IT-02 | Saving a 'Transport' habit with a positive distance | 'Transport' interface | Select a dropdown habit and input 12.5 for distance, then click save | 'habit logged successfully' | 'habit logged successfully' | Pass |
+| LOG-IT-03 | Saving a 'Transport' habit with a non zero/positive distance | 'Transport' interface | Select a dropdown habit and input 0 or a negative number or non numeric number for distance, then click save | 'Please enter a valid distance' | 'Please enter a valid distance'  | Pass |
+| LOG-IT-04 | Saving a 'Shopping Alternatives' habit | 'Shopping Alternatives' habit | Select a dropdown habit and click on save | 'habit logged sucessfully' | 'habit logged sucessfully' | Pass |
+
 
 <br><br>
 
