@@ -158,5 +158,29 @@ Testing UI Interaction and component changes on the Family Page
 
 ## Settings Page - Test Plan
 
+#### Unit/Integration testing is stored in `Sustainable Habit Tracker\src\pages\Settings.test.jsx`
+
+### Unit Testing
+
 | Test ID | Feature Being Tested | Component/Function | Steps to Execute | Expected Result | Actual Result | Pass/Fail |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| SET-UT-01 | Update Name Metadata | `updateName()` | Call `updateName()` with "John Smith". | `supabase.auth.updateUser()` is called with { name: "John Smith" } and profiles table updates with correct user id. | :--- | :--- |
+| SET-UT-02 | Update Username Metadata | `updateUsername()` | Call `updateUsername()` with "johnsmith123". | `supabase.auth.updateUser()` and profiles table update with correct username and user id. | :--- | :--- |
+| SET-UT-03 | Empty Name Validation | Button disable logic | Set name = "" | "Update Name" button is disabled. | :--- | :--- |
+| SET-UT-04 | Dark Mode Toggle | `handleDarkMode()` | Click dark mode toggle button. | `dark-mode` class is added to `document.body`. | :--- | :--- |
+| SET-UT-05 | Text Size Slider | `handleTextSize()` | Move slider from 16 to 20. | `document.documentElement.style.fontSize` becomes `"20px"`. | :--- | :--- |
+| SET-UT-06 | Brightness Slider | `handleBrightness()` | Move slider from 100 to 50. | 	Brightness overlay opacity updates correctly (darker screen). | :--- | :--- |
+
+### Integration Testing
+
+| Test ID | Feature Being Tested | Component | Steps to Execute | Expected Result | Actual Result | Pass/Fail |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| SET-IT-01 | Successful Name Update Flow | `Settings.jsx` | 1. Enter new name.<br>2. Click "Update Name". | Success message appears and Family page reflects updated name. | :--- | :--- |
+| SET-IT-02 | Successful Username Update Flow | `Settings.jsx` | 1. Enter new username.<br>2. Click "Update Username". | Username updates in Supabase and persists across navigation. | :--- | :--- |
+| SET-IT-03 | Dark Mode Persistence | `Accessibility` | 1. Enable dark mode.<br>2. Refresh page. | Dark mode remains enabled after refreshing page. | :--- | :--- |
+| SET-IT-04 | Text Size Persistence | `Accessibility` | 1. Increase text size.<br>2. Navigate to another page. | Manual navigation confirmed consistent font scaling. | :--- | :--- |
+| SET-IT-05 | Brightness Persistence | `Accessibility` | 1. Reduce brightness.<br>2. Refresh page. | Manual test confirmed overlay restored from `localStorage`. | :--- | :--- |
+
+
+<br><br>
+
