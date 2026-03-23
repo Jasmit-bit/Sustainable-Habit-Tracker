@@ -6,7 +6,7 @@ our Database Schema Looks like this :
 ![alt text](supabase-schema-jmvaznmcimknsmfykhvs.png)
 <br><br>
 Copied as SQL :
-``` -- WARNING: This schema is for context only and is not meant to be run.
+```bash -- WARNING: This schema is for context only and is not meant to be run.
 -- Table order and constraints may not be valid for execution.
 
 CREATE TABLE public.habit (
@@ -58,7 +58,7 @@ CREATE TABLE public.tips (
 ```
 ## The Script being run for Username Availability Function checking looks like :
 
-```
+```bash
 create or replace function check_username_available(test_username text)
 returns boolean
 language plpgsql
@@ -71,7 +71,7 @@ $$;
 ```
 ## Script for populating the user and the metadata for Supabase whenever a new user signs up
 
-```
+```bash
 CREATE OR REPLACE FUNCTION public.handle_new_user()
 RETURNS trigger
 LANGUAGE plpgsql
