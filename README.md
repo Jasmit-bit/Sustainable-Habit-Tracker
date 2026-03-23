@@ -2,22 +2,11 @@
 
 Welcome to the **Sustainable Habit Tracker**! This first Prototype web app is made to help users track their sustainable daily habits, reduce their carbon footprint, and compete with friends and family to hit monthly CO2 reduction goals.
 
-## Web App Breakdown
-
-* **Secure Authentication:** User signup and login powered by Supabase.
-* **Family & Household Dashboard:** * Create a household or join an existing one using a Invite code.
-    * Set and edit monthly household CO2 reduction goals (Only doable by an admin for now).
-    * Leaderboard showing all members and their individual progress.
-* **Habit Logging:** Log daily sustainable actions (like taking the bus, recycling, or eating plant-based meals) to rack up CO2 savings.
-* **Adjustable Accessibility Settings:**
-    * Customizable color themes (Green, Blue, Sunset, Warm Sand).
-    * Adjustable text size and screen brightness.
-    * Dark Mode support.
 
 ## Tech Stack
 
 * **Frontend:** React, React Router
-* **Backend & Database:** Supabase (PostgreSQL, Auth)
+* **Backend & Database:** JavaScript and Supabase (PostgreSQL, Auth)
 * **Styling:** Custom CSS 
 
 ---

@@ -89,3 +89,4 @@ RETURN new;
 END;
 $$;
 ```
+These are the main things which are kept in Supabase, the rest of the interactions with Supabase is done through the code by referencing the supabase client.
