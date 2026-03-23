@@ -16,7 +16,7 @@
 
 ## Log Habit Page - Test Plan
 
-#### Unit/Integration testing is stored in `Sustainable Habit Tracker\src\services` and ...
+#### Unit/Integration testing is stored in `Sustainable Habit Tracker\src\services` and `Sustainable Habit Tracker\src\pages`
 
 ### Unit Testing 
 
