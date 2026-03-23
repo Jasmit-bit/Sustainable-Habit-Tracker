@@ -3,6 +3,7 @@
 ## Authentication Page - Test Plan
 
 ### Unit Testing
+Filepath for the Unit Test `Sustainable Habit Tracker\src\utils\authUtils.test.js`
 
 Testing the password validation logic using custom edge-case strings to ensure security rules are strictly enforced.
 
@@ -14,6 +15,7 @@ Testing the password validation logic using custom edge-case strings to ensure s
 | AUTH-UT-04 | Complete Password Check | `validatePasswordCompleteness()` | Test weak string `"didthiswork"` and strong string `"StrongPassword47"`. | Returns `false` for weak string, `true` for strong string. | Vitest confirmed the logic works correctly required all three rules. | Pass |
 
 ### Integration Testing
+Filepath for the Integration Test `Sustainable Habit Tracker\src\Auth.test.jsx`
 
 Testing UI mode toggles, live state updates, and database authentication interactions.
 
