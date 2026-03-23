@@ -120,8 +120,38 @@ Testing UI Interaction and component changes on the habitlog Page
 
 ## Analytics Page - Test Plan
 
+#### Unit/Integration testing is stored in `Sustainable Habit Tracker\src\utils\analyticsUtils.test.js` and `Sustainable Habit Tracker\src\pages\Analytics.test.jsx`
+
+### Unit Testing
+
+Testing logic functions used on the Analytics page component, using mock data.
+
 | Test ID | Feature Being Tested | Component/Function | Steps to Execute | Expected Result | Actual Result | Pass/Fail |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| ANA-UT-01 | Calculating CO2 saved with mock data | `calculateCO2Saved()` | Pass mock data with known CO2 values and calculate the total | Correct total should be calculated | Vitest confirms that function has calculated the correct total | Pass | 
+| ANA-UT-02 | Calculating CO2 saved when no logs have been recorded | `calculateCO2Saved()` | Pass an empty array to the function | Should return 0 as there are no logs present | Vitest confirms that the function returns 0 | Pass |
+| ANA-UT-03 | Calculating plastic saved with mock data | `calculatePlasticSaved()` | Pass mock data with known plastic values and calculate the total | Correct total should be calculated | Vitest confirms that the function has calculated the correct total | Pass |
+| ANA-UT-04 | Calculating plastic saved when no logs have been recorded | `calculatePlasticSaved()` | Pass an empty array to the function | Should return 0 when no logs are present | Vitest confirms that the function returns 0 | Pass |
+| ANA-UT-05 | Recording time period during the morning | `getTimePeriod()` | Get the correct time period when the hour recorded is '8' | Function should return 'morning' | Vitest confirms the function returns 'morning' | Pass | 
+| ANA-UT-06 | Recording time period during the afternoon | `getTimePeriod()` | Get the correct time period when the hour recorded is '14' | Function should return 'afternoon' | Vitest confirms the function returns 'afternoon' | Pass | 
+| ANA-UT-07 | Recording time period during the night | `getTimePeriod()` | Get the correct time period when the hour recorded is '21' | Function should return 'night' | Vitest confirms the function returns 'night' | Pass | 
+
+### Integration Testing
+
+| Test ID | Feature Being Tested | Component/Function | Steps to Execute | Expected Result | Actual Result | Pass/Fail |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| ANA-IT-01 | Stats cards render correctly | `Analytics.jsx` | Render component with mock Supabase returning empty logs | CO2/Plastic saved and Total Habits Logged are visible on screen | Vitest rendered the component and confirmed all were present on screen | Pass | 
+| ANA-IT-02 | Error message displays if fetch fails | `Analytics.jsx` | Override the mock supabase to simulate an error being thrown | Error message displayed on screen | Vitest simulated the error being thrown with `mockRejectedValueOnce` and confirmed the error message appeared | Pass |
+| ANA-IT-03 | Stats show 0 when no logs are present | `Analytics.jsx` | Render component with mock Supabase returning empty logs | CO2/Plastic cards show 0 | Vitest confirmed both stats cards displayed 0 | Pass | 
+| ANA-IT-04 | Favourite habits section hidden when no logs are present | `Analytics.jsx` | Render component with empty logs | Favourite habits section no longer visible | Vitest confirms the section was not there when no logs have been entered | Pass | 
+| ANA-IT-05 | CO2 stat displays correct value | `Analytics.jsx` | Override mock supabase with some log data and known value of total CO2 | Vitest confirms correct value of CO2 was displayed | Pass |
+| ANA-IT-06 | Plastic stat displays correct value | `Analytics.jsx` | Override mock supabase with some log data and known value of total plastic | Vitest confirms correct value of plastic was displayed | Pass |
+| ANA-IT-07 | Habit count displays correct number | `Analytics.jsx` | Override mock supabase with some log data and known total habits logged | Vitest confirms correct number of habits logged was displayed | Pass |
+| ANA-IT-08 | Favourite habits section is visible with logs | `Analytics.jsx` | Override mock supabase with some log data | Vitest confirms the section is visible | Pass |
+| ANA-IT-09 | Log Now button appears for the habits | `Analytics.jsx` | Override mock supabase with some log data | Vitest confirms the Log Now button appears at least once on the page | Pass |
+| ANA-IT-10 | Page loads correctly after login | `Analytics.jsx` | *(Manual)* 1. Log in. 2. Navigate to analytics page. | Page loads with all stats cards visible and displaying correct values | Page renders as expected | Pass |
+| ANA-IT-11 | Stats update after logging a habit | `Analytics.jsx` | *(Manual*) 1. Log in and note current stats. 2. Log a habit. 3. Return to analytics page. | All stats totals have updated according to the new habit logged | Stats all update as expected | Pass |
+| ANA-IT-12 | Quick log confirmation message appears | `Analytics.jsx` | *(Manual)* 1. Navigate to analytics page. 2. Click "Log Now" on a favourite habit | Confirmation message appears briefly and then disappears | Message displays as expected | Pass | 
 
 
 <br><br>
