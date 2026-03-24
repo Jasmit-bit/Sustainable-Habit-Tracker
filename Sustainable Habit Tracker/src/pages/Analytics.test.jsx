@@ -163,4 +163,30 @@ describe('Analytics UI Integration Tests', function() {
             expect(screen.getAllByText('Log Now').length).toBeGreaterThan(0);
         })
     })
+
+    //CHART TESTING
+
+    //ANA-IT-13
+    test('ANA-IT-10: Chart renders when data exists', async function() {
+        vi.mocked(supabase.from).mockReturnValueOnce({
+            select: vi.fn().mockReturnValue({
+                eq: vi.fn().mockResolvedValue({data: mockLogsData, error: null})
+            })
+        })
+
+        render(<Analytics />);
+
+        await waitFor(function() {
+            expect(screen.getByText('📅 Weekly CO₂ vs Plastic')).toBeDefined();
+        })
+    })
+
+    //ANA-IT-14
+    test('ANA-IT-11: Chart does not render when there is no data', async function() {
+        render (<Analytics />);
+
+        await waitFor(function() {
+            expect(screen.queryByText('📅 Weekly CO₂ vs Plastic')).toBeNull();
+        })
+    })
 })

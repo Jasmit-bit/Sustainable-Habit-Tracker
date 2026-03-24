@@ -68,6 +68,10 @@ export function getWeeklyData(logs) {
         count[day].co2 += current.total_co2_saved;
         count[day].plastic += current.total_plastic_saved;
 
+        //Without this, the function will return an array with many d.p.
+        count[day].co2 = Number(count[day].co2.toFixed(2));
+        count[day].plastic = Number(count[day].plastic.toFixed(2));
+
         return count;
     }, {}) 
 
