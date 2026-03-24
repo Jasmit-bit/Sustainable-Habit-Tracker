@@ -137,6 +137,8 @@ Testing logic functions used on the Analytics page component, using mock data.
 | ANA-UT-07 | Recording time period during the night | `getTimePeriod()` | Get the correct time period when the hour recorded is '21' | Function should return 'night' | Vitest confirms the function returns 'night' | Pass |
 | ANA-UT-08 | Correct weekly data is passed | `getWeeklyData()` | Pass mock data with known stats values, calculate totals, and return grouped by day | Function should return an array of days and total stats for each category | Vitest confirms the function returns the correct array | Pass | 
 | ANA-UT-09 | Correct weekly data is passed when there are no logs | `getWeeklyData()` | Pass an empty array to the function | Should return an empty array when there are no logs | Vitest confirms that an empty array is returned | Pass |
+| ANA-UT-10 | Correct weekly habits retrieved | `getHabitFrequency()` | Pass mock data with known stats | Function should return ordered frequency of habits | Vitest confirms correct array is returned | Pass |
+| ANA-UT-11 | Correct weekly habits retrieved when there is no data | `getHabitFrequency()` | Pass an empty array to the function | Function should return an empty array | Vitest confirms the correct array is returned | Pass | 
 
 ### Integration Testing
 

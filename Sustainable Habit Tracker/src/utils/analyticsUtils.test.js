@@ -1,5 +1,6 @@
 import {describe, test, expect} from 'vitest';
 import { calculateCO2Saved, calculatePlasticSaved, getTimePeriod, getMostFrequent, getWeeklyData, getHabitFrequency } from './analyticsUtils.js';
+import { getHabit } from '../services/habitlog.js';
 
 describe('Analytics Page Unit Tests', function() {
 
@@ -81,6 +82,23 @@ describe('Analytics Page Unit Tests', function() {
     //ANA-UT-09 - getWeeklyData with empty array
     test('ANA-UT-09: getWeeklyData returns empty array for empty logs', function() {
         const result = getWeeklyData(emptyMockLogs);
+        expect(result).toEqual([]);
+    })
+
+    //ANA-UT-10 - getHabitFrequency with multiple logs
+    test('ANA-UT-10: getHabitFrequency returns correct total habits', function() {
+        const result = getHabitFrequency(mockLogs);
+        expect(result).toEqual([
+            {name: 'Biked or walked', value: 3},
+            {name: 'Meatless meal', value: 1},
+            {name: 'Avoided plastic', value: 1},
+            {name: 'Composted scraps', value: 1}
+        ])
+    })
+
+    //ANA-UT-11 - getHabitFrequency with no logs
+    test('ANA-UT-11: getHabitFrequency returns an empty array for empty logs', function() {
+        const result = getHabitFrequency(emptyMockLogs);
         expect(result).toEqual([]);
     })
 })
