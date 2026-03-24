@@ -196,12 +196,12 @@ Testing user profile metadata updates, input validation, and accessibility state
 
 | Test ID | Feature Being Tested | Component/Function | Steps to Execute | Expected Result | Actual Result | Pass/Fail |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| SET-UT-01 | Update Name Metadata | `updateName()` | Call `updateName()` with "John Smith". | `supabase.auth.updateUser()` is called with { name: "John Smith" } and profiles table updates with correct user id. | :--- | :--- |
-| SET-UT-02 | Update Username Metadata | `updateUsername()` | Call `updateUsername()` with "johnsmith123". | `supabase.auth.updateUser()` and profiles table update with correct username and user id. | :--- | :--- |
-| SET-UT-03 | Empty Name Validation | Button disable logic | Set name = "" | "Update Name" button is disabled. | :--- | :--- |
-| SET-UT-04 | Dark Mode Toggle | `handleDarkMode()` | Click dark mode toggle button. | `dark-mode` class is added to `document.body`. | :--- | :--- |
-| SET-UT-05 | Text Size Slider | `handleTextSize()` | Move slider from 16 to 20. | `document.documentElement.style.fontSize` becomes `"20px"`. | :--- | :--- |
-| SET-UT-06 | Brightness Slider | `handleBrightness()` | Move slider from 100 to 50. | 	Brightness overlay opacity updates correctly (darker screen). | :--- | :--- |
+| SET-UT-01 | Update Name Metadata | `updateName()` | Call `updateName()` with "John Smith". | `supabase.auth.updateUser()` is called with { name: "John Smith" } and profiles table updates with correct user id. | Vitest confirmed `supabase.auth.updateUser()` was called with the correct name value and that the profiles table update function executed with the correct user id. | Pass |
+| SET-UT-02 | Update Username Metadata | `updateUsername()` | Call `updateUsername()` with "johnsmith123". | `supabase.auth.updateUser()` and profiles table update with correct username and user id. | Vitest confirmed both metadata update and profiles table update were triggered with the correct username value. | Pass |
+| SET-UT-03 | Empty Name Validation | Button disable logic | Set name = "" | "Update Name" button is disabled. | Vitest rendered the component and verified the Update Name button had the `disabled` attribute when the input was empty. | Pass |
+| SET-UT-04 | Dark Mode Toggle | `handleDarkMode()` | Click dark mode toggle button. | `dark-mode` class is added to `document.body`. | Vitest simulated a click event and confirmed `document.body.classList.contains('dark-mode')` returned true. | Pass |
+| SET-UT-05 | Text Size Slider | `handleTextSize()` | Move slider from 16 to 20. | `document.documentElement.style.fontSize` becomes `"20px"`. | Vitest simulated slider change and confirmed `document.documentElement.style.fontSize` updated to `"20px"`. | Pass |
+| SET-UT-06 | Brightness Slider | `handleBrightness()` | Move slider from 100 to 50. | 	Brightness overlay opacity updates correctly (darker screen). | Vitest confirmed the brightness overlay element was created and its opacity updated according to the selected brightness value. | Pass |
 
 ### Integration Testing
 
@@ -209,11 +209,11 @@ Testing UI interaction flow, data persistence, and global accessibility styles a
 
 | Test ID | Feature Being Tested | Component | Steps to Execute | Expected Result | Actual Result | Pass/Fail |
 | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
-| SET-IT-01 | Successful Name Update Flow | `Settings.jsx` | 1. Enter new name.<br>2. Click "Update Name". | Success message appears and Family page reflects updated name. | :--- | :--- |
-| SET-IT-02 | Successful Username Update Flow | `Settings.jsx` | 1. Enter new username.<br>2. Click "Update Username". | Username updates in Supabase and persists across navigation. | :--- | :--- |
-| SET-IT-03 | Dark Mode Persistence | `Accessibility` | 1. Enable dark mode.<br>2. Refresh page. | Dark mode remains enabled after refreshing page. | :--- | :--- |
-| SET-IT-04 | Text Size Persistence | `Accessibility` | 1. Increase text size.<br>2. Navigate to another page. | Manual navigation confirmed consistent font scaling. | :--- | :--- |
-| SET-IT-05 | Brightness Persistence | `Accessibility` | 1. Reduce brightness.<br>2. Refresh page. | Manual test confirmed overlay restored from `localStorage`. | :--- | :--- |
+| SET-IT-01 | Successful Name Update Flow | `Settings.jsx` | 1. Enter new name.<br>2. Click "Update Name". | Success message appears and Family page reflects updated name. | Manual test confirmed success message appeared and updated name was reflected on the Family dashboard and home after navigation. | Pass |
+| SET-IT-02 | Successful Username Update Flow | `Settings.jsx` | 1. Enter new username.<br>2. Click "Update Username". | Username updates in Supabase and persists across navigation. | Manual test confirmed username updated correctly and remained consistent across pages after navigation. | Pass |
+| SET-IT-03 | Dark Mode Persistence | `Accessibility` | 1. Enable dark mode.<br>2. Refresh page. | Dark mode remains enabled after refreshing page. | Manual refresh confirmed dark mode class was re-applied automatically from `localStorage`. | Pass |
+| SET-IT-04 | Text Size Persistence | `Accessibility` | 1. Increase text size.<br>2. Navigate to another page. | Manual navigation confirmed consistent font scaling. | Manual navigation confirmed increased font size remained applied across all pages. | Pass |
+| SET-IT-05 | Brightness Persistence | `Accessibility` | 1. Reduce brightness.<br>2. Refresh page. | Manual test confirmed overlay restored from `localStorage`. | Manual refresh confirmed brightness overlay reloaded with correct opacity value. | Pass |
 
 
 <br><br>
