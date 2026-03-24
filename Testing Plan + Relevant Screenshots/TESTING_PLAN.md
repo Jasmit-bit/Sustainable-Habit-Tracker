@@ -134,7 +134,9 @@ Testing logic functions used on the Analytics page component, using mock data.
 | ANA-UT-04 | Calculating plastic saved when no logs have been recorded | `calculatePlasticSaved()` | Pass an empty array to the function | Should return 0 when no logs are present | Vitest confirms that the function returns 0 | Pass |
 | ANA-UT-05 | Recording time period during the morning | `getTimePeriod()` | Get the correct time period when the hour recorded is '8' | Function should return 'morning' | Vitest confirms the function returns 'morning' | Pass | 
 | ANA-UT-06 | Recording time period during the afternoon | `getTimePeriod()` | Get the correct time period when the hour recorded is '14' | Function should return 'afternoon' | Vitest confirms the function returns 'afternoon' | Pass | 
-| ANA-UT-07 | Recording time period during the night | `getTimePeriod()` | Get the correct time period when the hour recorded is '21' | Function should return 'night' | Vitest confirms the function returns 'night' | Pass | 
+| ANA-UT-07 | Recording time period during the night | `getTimePeriod()` | Get the correct time period when the hour recorded is '21' | Function should return 'night' | Vitest confirms the function returns 'night' | Pass |
+| ANA-UT-08 | Correct weekly data is passed | `getWeeklyData()` | Pass mock data with known stats values, calculate totals, and return grouped by day | Function should return an array of days and total stats for each category | Vitest confirms the function returns the correct array | Pass | 
+| ANA-UT-09 | Correct weekly data is passed when there are no logs | `getWeeklyData()` | Pass an empty array to the function | Should return an empty array when there are no logs | Vitest confirms that an empty array is returned | Pass |
 
 ### Integration Testing
 
@@ -152,6 +154,8 @@ Testing logic functions used on the Analytics page component, using mock data.
 | ANA-IT-10 | Page loads correctly after login | `Analytics.jsx` | *(Manual)* 1. Log in. 2. Navigate to analytics page. | Page loads with all stats cards visible and displaying correct values | Page renders as expected | Pass |
 | ANA-IT-11 | Stats update after logging a habit | `Analytics.jsx` | *(Manual*) 1. Log in and note current stats. 2. Log a habit. 3. Return to analytics page. | All stats totals have updated according to the new habit logged | Stats all update as expected | Pass |
 | ANA-IT-12 | Quick log confirmation message appears | `Analytics.jsx` | *(Manual)* 1. Navigate to analytics page. 2. Click "Log Now" on a favourite habit | Confirmation message appears briefly and then disappears | Message displays as expected | Pass | 
+| ANA-IT-13 | Chart renders when data exists for that week | `Analytics.jsx` | Override mock supabase with some mock data | Chart should be visible on the page and show the summary for the data | Vitest confirms the chart header - and therefore the chart appears on the page | Pass |
+| ANA-IT-14 | Chart does not render when there is no data | `Analytics.jsx` | Render component with mock supabase returning empty logs | Chart should not appear on the page as there is no data | Vitest confirms the chart header is not visible, therefore the chart has not rendered | Pass | 
 
 
 <br><br>
