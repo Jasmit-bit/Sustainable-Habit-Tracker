@@ -1,7 +1,16 @@
 import {describe, test, expect} from 'vitest';
-import { calculateCO2Saved, calculatePlasticSaved, getTimePeriod, getMostFrequent } from './analyticsUtils.js';
+import { calculateCO2Saved, calculatePlasticSaved, getTimePeriod, getMostFrequent, getWeeklyData, getHabitFrequency } from './analyticsUtils.js';
 
 describe('Analytics Page Unit Tests', function() {
+
+    beforeEach(() => {
+        vi.useFakeTimers();
+        vi.setSystemTime(new Date('2026-03-20T12:00:00'));
+    })
+
+    afterEach(() => {
+        vi.useRealTimers();
+    })
 
     const mockLogs = [
         { total_co2_saved: 2.6, total_plastic_saved: 0,  habit: { habit_name: 'Biked or walked' },    timestamp: '2026-03-17T08:30:00' },
@@ -57,5 +66,21 @@ describe('Analytics Page Unit Tests', function() {
         const mockTime = 21;
         const result = getTimePeriod(mockTime);
         expect(result).toBe('night');
+    })
+
+    //ANA-UT-08 - getWeeklyData with multiple logs
+    test('ANA-UT-08: getWeeklyData returns correctly grouped logs', function() {
+        const result = getWeeklyData(mockLogs);
+        expect(result).toEqual([
+            {day: 'Tue', co2: 4.9, plastic: 50},
+            {day: 'Wed', co2: 3.4, plastic: 0},
+            {day: 'Thu', co2: 2.6, plastic: 0}
+        ])
+    })
+
+    //ANA-UT-09 - getWeeklyData with empty array
+    test('ANA-UT-09: getWeeklyData returns empty array for empty logs', function() {
+        const result = getWeeklyData(emptyMockLogs);
+        expect(result).toEqual([]);
     })
 })

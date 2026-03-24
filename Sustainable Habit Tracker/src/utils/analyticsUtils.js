@@ -44,3 +44,59 @@ export function getMostFrequent(logs) {
     return mostFrequent;
 
 }
+
+export function getWeeklyData(logs) {
+    if (logs.length == 0) return [];
+
+    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const weeklyLogs = logs.filter(log => {
+        const logDate = new Date(log.timestamp);
+        return logDate >= sevenDaysAgo;
+    })
+
+    const groupByDay = weeklyLogs.reduce((count, current) => {
+        const day = dayNames[new Date(current.timestamp).getDay()];
+
+        if (!count[day]) {
+            count[day] = {day: day, co2: 0, plastic: 0};
+        }
+
+        count[day].co2 += current.total_co2_saved;
+        count[day].plastic += current.total_plastic_saved;
+
+        //Without this, the function will return an array with many d.p.
+        count[day].co2 = Number(count[day].co2.toFixed(2));
+        count[day].plastic = Number(count[day].plastic.toFixed(2));
+
+        return count;
+    }, {}) 
+
+    return Object.values(groupByDay);
+}
+
+export function getHabitFrequency(logs) {
+    if (logs.length == 0) return [];
+
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+    const weeklyLogs = logs.filter(log => {
+        const logDate = new Date(log.timestamp);
+        return logDate >= sevenDaysAgo;
+    }) 
+
+    const freqs = weeklyLogs.reduce((count, current) => {
+        const habitName = current.habit.habit_name;
+        count[habitName] = (count[habitName] || 0) + 1;
+        return count;
+    }, {})
+
+    //Adapted from getTopHabits
+    return Object.entries(freqs)
+        .sort((a, b) => b[1] - a[1])
+        .map(([name, count]) => ({habit: name, count: count}))
+}
