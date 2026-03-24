@@ -3,7 +3,7 @@ import {supabase} from '../supabaseClient';
 import './Analytics.css';
 import { calculateCO2Saved, calculatePlasticSaved, getMostFrequent, getTimePeriod, getWeeklyData, getHabitFrequency } from '../utils/analyticsUtils';
 import { logNormalHabit, logTransportHabit } from '../services/habitlog.js';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 
 //smart activity prediction
 //updated function to suggest activity based on current time of day
@@ -176,6 +176,7 @@ export default function Analytics() {
   const topHabits = getTopHabits(habitLogs);
   const weeklyData = getWeeklyData(habitLogs);
   const habitFrequency = getHabitFrequency(habitLogs);
+  const COLORS = ['#10b981', '#34d399', '#6ee7b7', '#a7f3d0', '#d1fae5'];
 
   return (
     <div className="analytics-container">
@@ -242,6 +243,31 @@ export default function Analytics() {
               <Bar yAxisId="left" dataKey="co2" name="CO₂ (kg)" fill="#10b981" />
               <Bar yAxisId="right" dataKey="plastic" name="Plastic (g)" fill="#065f46" />
             </BarChart>
+          </ResponsiveContainer>
+        </div>
+      )}
+
+      {/* habits logged pie chart*/}
+      {habitFrequency.length > 0 && (
+        <div className="chart-card">
+          <h3> Habit Breakdown </h3>
+          <ResponsiveContainer width="100%" height={270}>
+            <PieChart>
+              <Pie
+                data={habitFrequency}
+                dataKey="value"
+                nameKey="name"
+                cx="50%"
+                cy="50%"
+                outerRadius={90}
+              >
+                {habitFrequency.map((_, index) => (
+                  <Cell key={index} fill={COLORS[index % COLORS.length]} />
+                ))}
+              </Pie>
+              <Tooltip />
+              <Legend />
+            </PieChart>
           </ResponsiveContainer>
         </div>
       )}

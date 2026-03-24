@@ -98,5 +98,5 @@ export function getHabitFrequency(logs) {
     //Adapted from getTopHabits
     return Object.entries(freqs)
         .sort((a, b) => b[1] - a[1])
-        .map(([name, count]) => ({habit: name, count: count}))
+        .map(([name, count]) => ({name: name, value: count}))
 }
