@@ -1,8 +1,9 @@
 import {useState, useEffect} from 'react';
 import {supabase} from '../supabaseClient';
 import './Analytics.css';
-import { calculateCO2Saved, calculatePlasticSaved, getMostFrequent, getTimePeriod } from '../utils/analyticsUtils';
+import { calculateCO2Saved, calculatePlasticSaved, getMostFrequent, getTimePeriod, getWeeklyData, getHabitFrequency } from '../utils/analyticsUtils';
 import { logNormalHabit, logTransportHabit } from '../services/habitlog.js';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 //smart activity prediction
 //updated function to suggest activity based on current time of day
@@ -173,6 +174,8 @@ export default function Analytics() {
   }
 
   const topHabits = getTopHabits(habitLogs);
+  const weeklyData = getWeeklyData(habitLogs);
+  const habitFrequency = getHabitFrequency(habitLogs);
 
   return (
     <div className="analytics-container">
@@ -224,6 +227,24 @@ export default function Analytics() {
         </div>
       )}
 
+      {/* weekly co2 vs plastic bar chart */}
+      {weeklyData.length > 0 && (
+        <div className="chart-card">
+          <h3>📅 Weekly CO₂ vs Plastic</h3>
+          <ResponsiveContainer width="100%" height={250}>
+            <BarChart data={weeklyData}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="day" />
+              <YAxis yAxisId="left" />
+              <YAxis yAxisId="right" orientation="right" />
+              <Tooltip />
+              <Legend />
+              <Bar yAxisId="left" dataKey="co2" name="CO₂ (kg)" fill="#10b981" />
+              <Bar yAxisId="right" dataKey="plastic" name="Plastic (g)" fill="#065f46" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      )}
     </div>
   )
 }
