@@ -167,7 +167,7 @@ describe('Analytics UI Integration Tests', function() {
     //CHART TESTING
 
     //ANA-IT-13
-    test('ANA-IT-10: Chart renders when data exists', async function() {
+    test('ANA-IT-13: BarChart renders when data exists', async function() {
         vi.mocked(supabase.from).mockReturnValueOnce({
             select: vi.fn().mockReturnValue({
                 eq: vi.fn().mockResolvedValue({data: mockLogsData, error: null})
@@ -182,11 +182,35 @@ describe('Analytics UI Integration Tests', function() {
     })
 
     //ANA-IT-14
-    test('ANA-IT-11: Chart does not render when there is no data', async function() {
+    test('ANA-IT-14: BarChart does not render when there is no data', async function() {
         render (<Analytics />);
 
         await waitFor(function() {
             expect(screen.queryByText('📅 Weekly CO₂ vs Plastic')).toBeNull();
+        })
+    })
+
+    //ANA-IT-15
+    test('ANA-IT-15: PieChart renders when data exists', async function() {
+        vi.mocked(supabase.from).mockReturnValueOnce({
+            select: vi.fn().mockReturnValue({
+                eq: vi.fn().mockResolvedValue({data: mockLogsData, error: null})
+            })
+        })
+
+        render(<Analytics />);
+
+        await waitFor(function() {
+            expect(screen.getByText('Habit Breakdown')).toBeDefined();
+        })
+    })
+
+    //ANA-IT-16
+    test('ANA-IT-16: PieChart does not render when there is no data', async function() {
+        render (<Analytics />);
+
+        await waitFor(function() {
+            expect(screen.queryByText('Habit Breakdown')).toBeNull();
         })
     })
 })
