@@ -31,7 +31,10 @@ cd "Sustainable Habit Tracker"
 ```bash
 npm install
 ```
-
+and you also need to install the recharts library
+```bash
+npm install recharts
+```
 **4. Start the Development Server** Once the install is complete, start the local server by running:
 ```bash
 npm run dev
