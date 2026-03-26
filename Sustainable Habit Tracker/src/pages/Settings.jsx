@@ -92,6 +92,7 @@ export default function Settings() {
         value={name}
         onChange={(e) => setName(e.target.value)}
       />
+      {!username.trim() && <p style={{ color: '#d9534f', fontSize: '0.85rem', margin: '5px 0' }}>Username cannot be empty.</p>}
       <button onClick={updateName} disabled={!name.trim()}>
         Update Name
       </button>
@@ -104,6 +105,7 @@ export default function Settings() {
         value={username}
         onChange={(e) => setUsername(e.target.value)}
       />
+      {!username.trim() && <p style={{ color: '#d9534f', fontSize: '0.85rem', margin: '5px 0' }}>Username cannot be empty.</p>}
       <button onClick={updateUsername} disabled={!username.trim()}>
         Update Username
       </button>

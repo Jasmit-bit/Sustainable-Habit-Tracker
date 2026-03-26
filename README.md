@@ -1,13 +1,9 @@
 # Sustainable Habit Tracker
-
-Welcome to the **Sustainable Habit Tracker**! This first Prototype web app is made to help users track their sustainable daily habits, reduce their carbon footprint, and compete with friends and family to hit monthly CO2 reduction goals.
-
-
 ## Tech Stack
 
 * **Frontend:** React, React Router
 * **Backend & Database:** JavaScript and Supabase (PostgreSQL, Auth)
-* **Styling:** Custom CSS 
+* **Styling:** CSS 
 
 ---
 
