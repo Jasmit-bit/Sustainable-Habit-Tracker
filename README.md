@@ -1,9 +1,10 @@
 # Sustainable Habit Tracker
 ## Tech Stack
 
-* **Frontend:** React, React Router
+* **Frontend:** React, React Router, Vite, Recharts
 * **Backend & Database:** JavaScript and Supabase (PostgreSQL, Auth)
-* **Styling:** CSS 
+* **Testing:** Vitest
+* **Styling:** CSS
 
 ---
 
@@ -33,3 +34,9 @@ npm run dev
 ```
 
 **5. Open in Your Browser** After running the start command, your terminal will give you a local link (usually `http://localhost:5173` or `http://localhost:3000`). `Ctrl + Click` (or `Cmd + Click` on Mac) the link in the terminal to open the app in your browser and then use the web app.
+
+**6. Running The Tests** To verify the application logic and UI integration tests, run the following command in your terminal:
+```bash
+npx vitest
+```
+**Note** : Some tests will fail but thats explained in the testing doc
