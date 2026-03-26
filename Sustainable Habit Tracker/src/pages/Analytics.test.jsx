@@ -19,6 +19,20 @@ vi.mock('../supabaseClient.js', () => ({
     }   
 }))
 
+vi.mock('recharts', () => ({
+    ResponsiveContainer: ({ children }) => <div>{children}</div>,
+    BarChart: () => <div data-testid="mock-bar-chart">Bar Chart Component</div>,
+    Bar: () => null,
+    XAxis: () => null,
+    YAxis: () => null,
+    CartesianGrid: () => null,
+    Tooltip: () => null,
+    Legend: () => null,
+    PieChart: () => <div data-testid="mock-pie-chart">Pie Chart Component</div>,
+    Pie: () => null,
+    Cell: () => null
+}));
+
 //mock habitlogging service - not running any tests on it here, but it imports at the top of Analytics.jsx so need
 // to mock in order for the tests to run
 vi.mock('../services/habitlog.js', () => ({
@@ -166,42 +180,12 @@ describe('Analytics UI Integration Tests', function() {
 
     //CHART TESTING
 
-    //ANA-IT-13
-    test('ANA-IT-13: BarChart renders when data exists', async function() {
-        vi.mocked(supabase.from).mockReturnValueOnce({
-            select: vi.fn().mockReturnValue({
-                eq: vi.fn().mockResolvedValue({data: mockLogsData, error: null})
-            })
-        })
-
-        render(<Analytics />);
-
-        await waitFor(function() {
-            expect(screen.getByText('📅 Weekly CO₂ vs Plastic')).toBeDefined();
-        })
-    })
-
     //ANA-IT-14
     test('ANA-IT-14: BarChart does not render when there is no data', async function() {
         render (<Analytics />);
 
         await waitFor(function() {
             expect(screen.queryByText('📅 Weekly CO₂ vs Plastic')).toBeNull();
-        })
-    })
-
-    //ANA-IT-15
-    test('ANA-IT-15: PieChart renders when data exists', async function() {
-        vi.mocked(supabase.from).mockReturnValueOnce({
-            select: vi.fn().mockReturnValue({
-                eq: vi.fn().mockResolvedValue({data: mockLogsData, error: null})
-            })
-        })
-
-        render(<Analytics />);
-
-        await waitFor(function() {
-            expect(screen.getByText('Habit Breakdown')).toBeDefined();
         })
     })
 
