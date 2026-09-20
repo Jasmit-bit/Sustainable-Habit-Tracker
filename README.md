@@ -1,4 +1,8 @@
 # Sustainable Habit Tracker
+
+### The app is hosted via vercel on https://habittracker-gamma-five.vercel.app/ but the backend is running on Supabase free trial so the backend may not be active contact me and I will activate the backend if you want to actually use the webapp.
+
+
 ## Tech Stack
 
 * **Frontend:** React, React Router, Vite, Recharts
