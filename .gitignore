@@ -1,0 +1,15 @@
+# OS and IDE files
+.DS_Store
+.idea
+.vscode/*
+!.vscode/extensions.json
+
+# Node & Build artifacts
+node_modules
+dist
+dist-ssr
+*.local
+*.log
+
+# Environment variables
+.env
